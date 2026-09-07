@@ -16,6 +16,13 @@ const PUBLIC_ASSET_PATHS = new Set([
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
+  // Dev-only bypass: `next dev` always sets NODE_ENV=development, and
+  // `next build`/`next start` (incl. the Cloud Run Docker image) always set
+  // it to production, so this can't leak into a deployed environment.
+  if (process.env.NODE_ENV === 'development') {
+    return NextResponse.next()
+  }
+
   if (PUBLIC_ASSET_PATHS.has(pathname)) {
     return NextResponse.next()
   }
