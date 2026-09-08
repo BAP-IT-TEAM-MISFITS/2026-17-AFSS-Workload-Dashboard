@@ -213,6 +213,14 @@ a:focus-visible {
   border: 1px solid #b8860b;
 }
 
+/* Light-context variant — for pills sitting inside white table rows/cards
+   rather than the dark control bar. */
+.afss-pill-light {
+  background: #eef0f4;
+  color: #444;
+  border: 1px solid #dcdfe6;
+}
+
 /* ── Content cards ── */
 .afss-card {
   background: #fff;
