@@ -586,8 +586,8 @@ export default function BacklogPage() {
         </div>
       )}
 
-      <div className="flex-1 overflow-auto px-4 pb-4">
-        <div className="afss-card">
+      <div className="flex-1 min-h-0 px-4 pb-4">
+        <div className="afss-card afss-card-scroll h-full">
           <table className="afss-table w-full border-collapse" style={{ minWidth: "1800px" }}>
             <thead className="sticky top-0 z-10">
               <tr>

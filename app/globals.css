@@ -4,7 +4,7 @@
   --afss-red: #cc2222;
   --afss-dark: #1a1a2e;
   --afss-accent: #e63946;
-  --afss-bg: #f0f2f5;
+  --afss-bg: #f5f5f5;
 
   --background: var(--afss-bg);
   --foreground: #171717;
@@ -228,6 +228,14 @@ a:focus-visible {
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.05);
   overflow: hidden;
+}
+
+/* Cards whose content can exceed the card's own box (a wide table, a long
+   list) need to scroll instead of silently clipping — this still clips to
+   the rounded corners, it just also provides scrollbars when content
+   overflows, rather than hiding that content with no way to reach it. */
+.afss-card-scroll {
+  overflow: auto;
 }
 
 /* ── Tables ── */

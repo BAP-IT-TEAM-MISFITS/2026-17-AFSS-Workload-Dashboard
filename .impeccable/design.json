@@ -8,7 +8,7 @@
       "brand-accent": { "role": "primary", "displayName": "Signal Crimson", "canonical": "#e63946", "tonalRamp": ["#3f0a0d", "#5e0f14", "#8c161d", "#c4232b", "#e63946", "#ec636d", "#f29ba1", "#f8d3d6"] },
       "brand-gradient-start": { "role": "primary", "displayName": "Ember Gradient Start", "canonical": "#ff4d5a", "tonalRamp": ["#400e12", "#661519", "#992025", "#cc2a33", "#ff4d5a", "#ff8087", "#ffb3b8", "#ffe6e8"] },
       "control-bar-navy": { "role": "neutral", "displayName": "Console Navy", "canonical": "#1a1a2e", "tonalRamp": ["#08080e", "#0f0f1a", "#1a1a2e", "#26264a", "#38386b", "#50508f", "#8484b8", "#c2c2dd"] },
-      "page-ground": { "role": "neutral", "displayName": "Ground Gray", "canonical": "#f0f2f5", "tonalRamp": ["#2a2c30", "#4a4d52", "#6e7176", "#9599a0", "#c3c6cb", "#dfe1e5", "#f0f2f5", "#fafbfc"] },
+      "page-ground": { "role": "neutral", "displayName": "Ground Gray", "canonical": "#f5f5f5", "tonalRamp": ["#2a2a2a", "#4a4a4a", "#6e6e6e", "#959595", "#c3c3c3", "#e0e0e0", "#f5f5f5", "#fafafa"] },
       "card-surface": { "role": "neutral", "displayName": "Card White", "canonical": "#ffffff", "tonalRamp": ["#d9d9d9", "#e6e6e6", "#f0f0f0", "#f7f7f7", "#fafafa", "#fcfcfc", "#ffffff", "#ffffff"] },
       "foreground": { "role": "neutral", "displayName": "Ink", "canonical": "#171717", "tonalRamp": ["#000000", "#0a0a0a", "#171717", "#2e2e2e", "#525252", "#7a7a7a", "#a3a3a3", "#d4d4d4"] },
       "table-header": { "role": "neutral", "displayName": "Header Charcoal", "canonical": "#2c2c2c", "tonalRamp": ["#000000", "#141414", "#2c2c2c", "#454545", "#616161", "#828282", "#a8a8a8", "#d4d4d4"] },

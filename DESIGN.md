@@ -6,7 +6,7 @@ colors:
   brand-accent: "#e63946"
   brand-gradient-start: "#ff4d5a"
   control-bar-navy: "#1a1a2e"
-  page-ground: "#f0f2f5"
+  page-ground: "#f5f5f5"
   foreground: "#171717"
   card-surface: "#ffffff"
   table-header: "#2c2c2c"
@@ -109,7 +109,7 @@ The palette is a small, fixed brand-red-on-dark-navy-glass system laid over a li
 
 ### Neutral
 - **Console Navy** (`#1a1a2e`): the control-bar glass base (used at 85% opacity with `blur(20px) saturate(180%)`) and the full-bleed background on the login screen.
-- **Ground Gray** (`#f0f2f5`): the page background beneath every white card, on every authenticated screen.
+- **Ground Gray** (`#f5f5f5`): the page background beneath every white card, on every authenticated screen. (Adjusted from an earlier `#f0f2f5` after user feedback that the cooler/bluer tint read poorly against the table cells that inherit the page background directly.)
 - **Card White** (`#ffffff`): the sole content-container background.
 - **Ink** (`#171717`): default body foreground on the light ground.
 - **Header Charcoal** (`#2c2c2c`): table header row fill (backlog and both dashboards), always paired with white uppercase labels.
