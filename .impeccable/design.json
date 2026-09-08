@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-08T00:00:00Z",
+  "title": "Design System: AFSS Backlog",
+  "extensions": {
+    "colorMeta": {
+      "brand-red": { "role": "primary", "displayName": "Command Red", "canonical": "#cc2222", "tonalRamp": ["#3d0a0a", "#5c0f0f", "#7a1515", "#991a1a", "#cc2222", "#d95050", "#e68080", "#f2c2c2"] },
+      "brand-accent": { "role": "primary", "displayName": "Signal Crimson", "canonical": "#e63946", "tonalRamp": ["#3f0a0d", "#5e0f14", "#8c161d", "#c4232b", "#e63946", "#ec636d", "#f29ba1", "#f8d3d6"] },
+      "brand-gradient-start": { "role": "primary", "displayName": "Ember Gradient Start", "canonical": "#ff4d5a", "tonalRamp": ["#400e12", "#661519", "#992025", "#cc2a33", "#ff4d5a", "#ff8087", "#ffb3b8", "#ffe6e8"] },
+      "control-bar-navy": { "role": "neutral", "displayName": "Console Navy", "canonical": "#1a1a2e", "tonalRamp": ["#08080e", "#0f0f1a", "#1a1a2e", "#26264a", "#38386b", "#50508f", "#8484b8", "#c2c2dd"] },
+      "page-ground": { "role": "neutral", "displayName": "Ground Gray", "canonical": "#f0f2f5", "tonalRamp": ["#2a2c30", "#4a4d52", "#6e7176", "#9599a0", "#c3c6cb", "#dfe1e5", "#f0f2f5", "#fafbfc"] },
+      "card-surface": { "role": "neutral", "displayName": "Card White", "canonical": "#ffffff", "tonalRamp": ["#d9d9d9", "#e6e6e6", "#f0f0f0", "#f7f7f7", "#fafafa", "#fcfcfc", "#ffffff", "#ffffff"] },
+      "foreground": { "role": "neutral", "displayName": "Ink", "canonical": "#171717", "tonalRamp": ["#000000", "#0a0a0a", "#171717", "#2e2e2e", "#525252", "#7a7a7a", "#a3a3a3", "#d4d4d4"] },
+      "table-header": { "role": "neutral", "displayName": "Header Charcoal", "canonical": "#2c2c2c", "tonalRamp": ["#000000", "#141414", "#2c2c2c", "#454545", "#616161", "#828282", "#a8a8a8", "#d4d4d4"] },
+      "table-stripe": { "role": "neutral", "displayName": "Stripe Gray", "canonical": "#f9f9f9", "tonalRamp": ["#c4c4c4", "#d6d6d6", "#e4e4e4", "#eeeeee", "#f5f5f5", "#f9f9f9", "#fcfcfc", "#ffffff"] },
+      "table-hover": { "role": "neutral", "displayName": "Hover Blush", "canonical": "#fdeceb", "tonalRamp": ["#5c1410", "#8a2019", "#c22e26", "#e85147", "#f28a80", "#f8b6ae", "#fdeceb", "#fff7f6"] },
+      "table-border": { "role": "neutral", "displayName": "Hairline", "canonical": "#e8e8e8", "tonalRamp": ["#a0a0a0", "#b6b6b6", "#c8c8c8", "#d8d8d8", "#e2e2e2", "#e8e8e8", "#f0f0f0", "#f8f8f8"] },
+      "pill-neutral-bg": { "role": "neutral", "displayName": "Pill Neutral Fill", "canonical": "#23233b", "tonalRamp": ["#0c0c14", "#14142290", "#23233b", "#31314f", "#454568", "#66668c", "#9494b0", "#c8c8dc"] },
+      "pill-neutral-text": { "role": "neutral", "displayName": "Pill Neutral Text", "canonical": "#8e99c5", "tonalRamp": ["#1f2436", "#333a55", "#4c5578", "#69739e", "#8e99c5", "#adb6d6", "#cdd3e6", "#eaedf5"] },
+      "pill-info-bg": { "role": "secondary", "displayName": "Pill Info Fill", "canonical": "#1a3a5c", "tonalRamp": ["#08141f", "#0f2537", "#1a3a5c", "#245278", "#316d9c", "#5a92bd", "#93bcda", "#cfe0ef"] },
+      "pill-info-text": { "role": "secondary", "displayName": "Pill Info Text", "canonical": "#7ec8f5", "tonalRamp": ["#0c3350", "#144c78", "#1e6ba3", "#3e93cf", "#7ec8f5", "#a6dbf9", "#cceefc", "#eaf8fe"] },
+      "pill-success-bg": { "role": "tertiary", "displayName": "Pill Success Fill", "canonical": "#102e1f", "tonalRamp": ["#050f0a", "#0a1c12", "#102e1f", "#164229", "#1e5936", "#2c7a4a", "#4fa06b", "#93cba7"] },
+      "pill-success-text": { "role": "tertiary", "displayName": "Pill Success Text", "canonical": "#52cc8a", "tonalRamp": ["#0e3320", "#19502f", "#237042", "#369257", "#52cc8a", "#7edaa8", "#aae8c6", "#d6f4e2"] },
+      "pill-error-bg": { "role": "tertiary", "displayName": "Pill Error Fill", "canonical": "#2e1010", "tonalRamp": ["#120606", "#1e0a0a", "#2e1010", "#421717", "#5c2020", "#7d2c2c", "#a54747", "#cf8a8a"] },
+      "pill-error-text": { "role": "tertiary", "displayName": "Pill Error Text", "canonical": "#cc5252", "tonalRamp": ["#4a1414", "#6e1e1e", "#972828", "#c03535", "#cc5252", "#dc7f7f", "#eaadad", "#f6d6d6"] },
+      "pill-warning-bg": { "role": "tertiary", "displayName": "Pill Warning Fill", "canonical": "#3a2c0f", "tonalRamp": ["#160f04", "#241b08", "#3a2c0f", "#523d16", "#6f5320", "#93712f", "#bd9a52", "#e2cda0"] },
+      "pill-warning-text": { "role": "tertiary", "displayName": "Pill Warning Text", "canonical": "#f0b84d", "tonalRamp": ["#4a3609", "#70510e", "#986f16", "#c08f22", "#f0b84d", "#f5cd7f", "#fae2b3", "#fdf3e0"] }
+    },
+    "typographyMeta": {
+      "body": { "displayName": "Body / UI", "purpose": "Control-bar labels, sub-headers, general card copy." },
+      "label": { "displayName": "Pill / Header Label", "purpose": "Uppercase, tracked label used only on status pills and table header cells." },
+      "data-cell": { "displayName": "Table Data Cell", "purpose": "Dominant size across all dense tables (backlog + dashboards)." }
+    },
+    "shadows": [
+      { "name": "glass-bar", "value": "0 8px 32px rgba(0,0,0,0.2)", "purpose": "Separation of the sticky dark-glass control bar from page content." },
+      { "name": "card-ambient", "value": "0 30px 90px rgba(0,0,0,0.12)", "purpose": "Soft ambient lift under every white content card." },
+      { "name": "brand-glow", "value": "0 4px 15px rgba(230,57,70,0.3)", "purpose": "Tinted glow exclusive to the primary gradient button; intensifies to 0 6px 20px rgba(230,57,70,0.45) on hover." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Default transition easing on buttons and inputs." },
+      { "name": "duration-fast", "value": "0.15s-0.2s", "purpose": "Hover/focus state transitions across buttons, inputs, pills." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px", "purpose": "Hides secondary control-bar text (last-updated, auto-refresh note) below this width." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single dominant CTA per screen (e.g. Download CSV).",
+      "html": "<button class=\"ds-btn-primary\">Download CSV</button>",
+      "css": ".ds-btn-primary { height: 40px; background: linear-gradient(135deg, #ff4d5a, #e63946); color: #fff; border: none; padding: 0 20px; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.2px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(230,57,70,0.3); transition: all 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(230,57,70,0.45); } .ds-btn-primary:focus-visible { outline: 2px solid #e63946; outline-offset: 2px; } .ds-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }"
+    },
+    {
+      "name": "Outline Button (Active Toggle)",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary/toggle button used for stage tabs and sign-out; carries an explicit active state.",
+      "html": "<button class=\"ds-btn-outline\" data-active=\"true\">Pending</button>",
+      "css": ".ds-btn-outline { height: 40px; background: rgba(255,255,255,0.05); border: 1px solid #4d4d70; color: #ccc; padding: 0 18px; font-size: 0.85rem; font-weight: 500; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-btn-outline:hover { background: rgba(255,255,255,0.1); border-color: #6d6d90; color: #fff; } .ds-btn-outline[data-active='true'] { background: rgba(230,57,70,0.15); border-color: #e63946; color: #fff; } .ds-btn-outline:focus-visible { outline: 2px solid #ff7d86; outline-offset: 2px; }"
+    },
+    {
+      "name": "Status Pill",
+      "kind": "chip",
+      "refersTo": "pill-neutral",
+      "description": "Capsule status/count indicator; five color triads (neutral/info/success/error/warning), each dark fill + saturated border + tinted text.",
+      "html": "<span class=\"ds-pill ds-pill-success\"><span class=\"ds-pill-dot\"></span>Complete</span>",
+      "css": ".ds-pill { display: inline-flex; align-items: center; padding: 3px 12px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase; white-space: nowrap; } .ds-pill-dot { width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; background: currentColor; } .ds-pill-success { background: #102e1f; color: #52cc8a; border: 1px solid #27ae60; } .ds-pill-warning { background: #3a2c0f; color: #f0b84d; border: 1px solid #b8860b; } .ds-pill-error { background: #2e1010; color: #cc5252; border: 1px solid #c0392b; } .ds-pill-info { background: #1a3a5c; color: #7ec8f5; border: 1px solid #3498db; } .ds-pill-neutral { background: #23233b; color: #8e99c5; border: 1px solid #3d3d5c; }"
+    },
+    {
+      "name": "Dark-Glass Control Bar Input",
+      "kind": "input",
+      "refersTo": "input-dark",
+      "description": "Select/button-styled control living on the sticky dark-glass bar (company dropdown, dashboard select).",
+      "html": "<select class=\"ds-input-dark\"><option>Dashboard</option></select>",
+      "css": ".ds-input-dark { height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; font-size: 0.82rem; outline: none; cursor: pointer; transition: all 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-input-dark:focus { border-color: #e63946; background: #2a2a45; box-shadow: 0 0 0 3px rgba(230,57,70,0.15); }"
+    },
+    {
+      "name": "Content Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The system's sole content container: white surface, 16px radius, soft ambient shadow.",
+      "html": "<div class=\"ds-card\"><p>Card content</p></div>",
+      "css": ".ds-card { background: #fff; border-radius: 16px; box-shadow: 0 30px 90px rgba(0,0,0,0.12); border: 1px solid rgba(0,0,0,0.05); overflow: hidden; }"
+    },
+    {
+      "name": "Dense Data Table",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "The system's signature: dark charcoal sticky header, striped rows, red-tinted hover, hairline borders, status pills in the data column.",
+      "html": "<table class=\"ds-table\"><thead><tr><th>Job</th><th>Status</th></tr></thead><tbody><tr><td>1024</td><td><span class=\"ds-pill ds-pill-neutral\">Scheduled</span></td></tr><tr><td>1025</td><td><span class=\"ds-pill ds-pill-neutral\">Pending</span></td></tr></tbody></table>",
+      "css": ".ds-table { width: 100%; border-collapse: collapse; } .ds-table thead th { background: #2c2c2c; color: #fff; text-transform: uppercase; font-weight: 700; letter-spacing: 0.3px; font-size: 0.68rem; padding: 10px 12px; border-right: 1px solid #444; text-align: left; } .ds-table td { padding: 8px 12px; font-size: 0.75rem; color: #333; border: 1px solid #e8e8e8; white-space: nowrap; } .ds-table tbody tr:nth-child(even) td { background: #f9f9f9; } .ds-table tbody tr:hover td { background: #fdeceb; }"
+    },
+    {
+      "name": "Loading Spinner",
+      "kind": "custom",
+      "refersTo": "input-dark",
+      "description": "Circular loading indicator used during SimPRO fetch waits.",
+      "html": "<span class=\"ds-spinner\"></span>",
+      "css": ".ds-spinner { width: 40px; height: 40px; border: 4px solid rgba(26,26,46,0.1); border-top-color: #e63946; border-radius: 50%; animation: ds-spin 0.75s linear infinite; } @keyframes ds-spin { to { transform: rotate(360deg); } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Fire-Safety Command Console",
+    "overview": "AFSS Backlog is a directed restyle onto a sibling internal tool's (FPOWS) established look, not an original creative direction: a dense operational data console housed inside a dark-glass control shell, with content living on white cards over a light-gray ground. The build confirms the pinned world faithfully — sticky dark-navy glass bar, red/crimson brand accent, Inter throughout, striped dark-headed tables, capsule status pills — and adds nothing beyond it. Density is the point: every table in this system (backlog rows, dashboard grids) carries far more columns than fit a viewport comfortably, and the system does not fight that; it manages it with sticky headers, horizontal scroll, and small, consistent type rather than by simplifying the data. The dashboards (dashboard, dashboard2) preserve a pre-existing spreadsheet/report structure (multi-row rowSpan/colSpan grid headers) — this build only reskinned that structure's chrome and color to match FPOWS; the structural density itself is inherited, not a new design decision, and should not be read as a signature grid pattern to imitate on non-tabular surfaces.",
+    "keyCharacteristics": [
+      "Dark-glass sticky control bar as the one fixed chrome element on every authenticated screen (shared via UserBar.tsx plus each page's own control bar).",
+      "Brand red/crimson reserved for primary actions, focus rings, and small brand marks — never for body text or large fills.",
+      "White, single-radius cards as the only content container; no secondary container styles.",
+      "Capsule pills as the sole status/count-encoding device — no badges, no colored underlines, no icon-only status marks.",
+      "Dense tables are a first-class citizen: small type, tight padding, sticky headers, striped rows, no attempt to air out the data."
+    ],
+    "rules": [
+      { "name": "The Red-Is-Rare Rule", "body": "Brand red/crimson appears only on: the primary CTA, focus rings, active-toggle borders, small identifying swatches, and the spinner. It never fills a card, a table, or body text — its rarity against the navy glass and white cards is what keeps it legible as the action color.", "section": "colors" },
+      { "name": "The One-Family Rule", "body": "There is no second (display/serif/mono) typeface anywhere in the shipped build. Every weight from 300–800 is Inter; new surfaces should not introduce a display face.", "section": "typography" },
+      { "name": "The Soft-Glow-Only Rule", "body": "Every shadow in the shipped build is large-radius and diffuse (ambient card lift, glass-bar blur, tinted button glow). Don't introduce hard-offset/neobrutalist shadows — that vocabulary doesn't exist anywhere in this build.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep brand red/crimson confined to primary actions, focus states, and small identity marks (The Red-Is-Rare Rule).",
+      "Do use the 10px control radius for every interactive control and the 16px card radius for every content container — no third radius scale.",
+      "Do render status/state exclusively as capsule pills with a dark-fill + colored-border + colored-text triad, never a solid saturated fill.",
+      "Do keep dashboard STATUS_ROWS and per-job status-pill colors as data-driven semantic encoding — preserve their meaning if the dashboard is extended, don't restyle them decoratively.",
+      "Do use soft, large-radius ambient shadows and glass blur for depth; keep the tinted glow shadow exclusive to the primary/gradient button."
+    ],
+    "donts": [
+      "Don't introduce hard-offset/neobrutalist shadows — no shadow in this build has a small, non-blurred offset.",
+      "Don't add a second typeface; Inter (300–800) is the only family used across the whole build.",
+      "Don't invent a new badge/chip shape for status or counts — the capsule pill is the system's only device for that job.",
+      "Don't treat the dashboard's inherited rowSpan/colSpan report-grid density as a pattern to imitate on new, non-tabular surfaces — it's a preserved structural artifact of the pre-existing dashboards, not a chosen signature layout."
+    ]
+  }
+}

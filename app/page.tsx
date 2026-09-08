@@ -406,10 +406,6 @@ export default function BacklogPage() {
     return () => clearInterval(id);
   }, [view, stage, monthFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const stageColor = raw
-    ? "bg-purple-100 text-purple-700"
-    : stage === "Pending" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700";
-
   const headers = isRawView(view)
     ? RAW_HEADERS[view]
     : view === 8
@@ -449,59 +445,62 @@ export default function BacklogPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen" onClick={() => setDropdownOpen(false)}>
+    <div className="flex flex-col h-screen" style={{ background: "var(--afss-bg)" }} onClick={() => setDropdownOpen(false)}>
 
-      {/* Top bar: company dropdown + stage tabs */}
-      <div className="flex flex-wrap items-stretch bg-white border-b border-neutral-200 shrink-0">
+      {/* Control bar: brand + company dropdown + dashboard select + stage tabs + actions */}
+      <div className="afss-control-bar flex flex-wrap items-center gap-3 px-4 py-2.5 shrink-0">
+        <span className="text-white text-sm font-bold tracking-wide whitespace-nowrap">
+          AFSS <span style={{ color: "var(--afss-accent)", opacity: 0.9 }}>BACKLOG</span>
+        </span>
 
         {/* Company dropdown */}
-        <div className="relative w-full sm:w-auto border-b sm:border-b-0" onClick={(e) => e.stopPropagation()}>
+        <div className="relative" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => setDropdownOpen((o) => !o)}
-            className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-neutral-800 hover:bg-neutral-50 sm:border-r sm:border-neutral-200 w-full sm:min-w-[180px]"
+            className="afss-input flex items-center gap-2 min-w-[200px]"
           >
-            <span className="w-3 h-3 rounded-sm bg-red-500 shrink-0" />
+            <span className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ background: "var(--afss-red)" }} />
             {companyLabel}
-            <svg className="ml-auto w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="ml-auto w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
 
           {dropdownOpen && (
-            <div className="absolute top-full left-0 z-50 bg-white border border-neutral-200 rounded-b shadow-lg w-full sm:min-w-[220px]">
+            <div className="absolute top-full left-0 mt-1 z-50 bg-[#1a1a2e] border border-[#3d3d5c] rounded-xl shadow-2xl min-w-[240px] overflow-hidden py-1">
               {COMPANIES.map((co) => (
                 <button
                   key={co.id}
                   onClick={() => { setView(co.id); setDropdownOpen(false); }}
-                  className={`w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-neutral-50 ${
-                    co.id === view ? "font-semibold text-blue-600" : "text-neutral-700"
+                  className={`w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-white/5 ${
+                    co.id === view ? "font-semibold text-white" : "text-gray-300"
                   }`}
                 >
-                  <span className="w-3 h-3 rounded-sm bg-red-500 shrink-0" />
+                  <span className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ background: "var(--afss-red)" }} />
                   {co.label}
                   {co.id === view && (
-                    <svg className="ml-auto w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="ml-auto w-4 h-4" style={{ color: "var(--afss-accent)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   )}
                 </button>
               ))}
-              <div className="border-t border-neutral-200 my-1" />
-              <div className="px-4 pt-1 pb-0.5 text-[10px] font-semibold uppercase tracking-wide text-neutral-400">
+              <div className="border-t border-[#3d3d5c] my-1" />
+              <div className="px-4 pt-1 pb-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
                 Raw data (dashboard widgets)
               </div>
               {RAW_VIEWS.map((v) => (
                 <button
                   key={v.id}
                   onClick={() => { setView(v.id); setDropdownOpen(false); }}
-                  className={`w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-neutral-50 ${
-                    v.id === view ? "font-semibold text-blue-600" : "text-neutral-700"
+                  className={`w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-white/5 ${
+                    v.id === view ? "font-semibold text-white" : "text-gray-300"
                   }`}
                 >
-                  <span className="w-3 h-3 rounded-sm bg-purple-500 shrink-0" />
+                  <span className="w-2.5 h-2.5 rounded-sm bg-purple-400 shrink-0" />
                   {v.label}
                   {v.id === view && (
-                    <svg className="ml-auto w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="ml-auto w-4 h-4" style={{ color: "var(--afss-accent)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   )}
@@ -511,11 +510,12 @@ export default function BacklogPage() {
           )}
         </div>
 
-        {/* Dashboard dropdown */}
+        {/* Dashboard select */}
         <select
           defaultValue=""
           onChange={e => { if (e.target.value) window.location.href = e.target.value; }}
-          className="px-5 py-3 text-sm font-medium text-neutral-500 hover:text-neutral-800 border-b sm:border-b-0 sm:border-r border-neutral-200 hover:bg-neutral-50 bg-white cursor-pointer w-full sm:w-auto"
+          className="afss-input"
+          style={{ background: "rgba(255, 255, 255, 0.05)", color: "#fff" }}
         >
           <option value="" disabled hidden>Dashboard</option>
           <option value="/dashboard">Dashboard</option>
@@ -524,111 +524,114 @@ export default function BacklogPage() {
 
         {/* Stage tabs (not applicable to raw data views) */}
         {!raw && (
-          <div className="flex items-center px-2 w-full sm:w-auto">
+          <div className="flex items-center gap-1.5">
             {STAGES.map((st) => (
               <button
                 key={st}
                 onClick={() => setStage(st)}
-                className={`flex-1 sm:flex-none px-5 py-3 text-sm font-medium border-b-2 transition-colors ${
-                  st === stage
-                    ? "border-blue-600 text-blue-600"
-                    : "border-transparent text-neutral-500 hover:text-neutral-800 hover:border-neutral-300"
-                }`}
+                className="afss-btn-outline"
+                data-active={st === stage}
               >
                 {st}
               </button>
             ))}
           </div>
         )}
+
+        <div className="flex-1" />
+
+        {!loading && (
+          <span className={`afss-pill ${raw ? "afss-pill-info" : stage === "Pending" ? "afss-pill-warning" : "afss-pill-neutral"}`}>
+            {jobs.length} job{jobs.length !== 1 ? "s" : ""}
+          </span>
+        )}
+        {refreshing && <span className="text-xs" style={{ color: "var(--afss-accent)" }}>Syncing…</span>}
+        {lastUpdated && (
+          <span className="hidden sm:inline text-xs text-gray-400 whitespace-nowrap">
+            Updated: {lastUpdated.toLocaleTimeString()}
+          </span>
+        )}
+        <button
+          onClick={downloadCsv}
+          disabled={loading || jobs.length === 0}
+          className="afss-btn"
+        >
+          Download CSV
+        </button>
+        <span className="hidden sm:inline text-xs text-gray-500 whitespace-nowrap">Auto every 60s</span>
       </div>
 
-      {/* Sub-header: title + controls */}
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-2 bg-white border-b border-neutral-200 text-xs text-neutral-500 shrink-0">
-        <div className="flex items-center gap-3 min-w-0">
-          <span className="font-semibold text-neutral-800 text-sm truncate">
-            {companyLabel}{!raw && ` — ${stage}${view === 8 ? "" : " · A CFSP ONLY"}`}
-            {raw && monthFilter !== "all" && ` — ${monthOptions.find(o => o.value === monthFilter)?.label ?? ""}`}
-          </span>
-          {!loading && (
-            <span className={`px-2 py-0.5 rounded-full font-semibold text-xs shrink-0 ${stageColor}`}>
-              {jobs.length} job{jobs.length !== 1 ? "s" : ""}
-            </span>
-          )}
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {refreshing && <span className="text-blue-500">Syncing…</span>}
-          {lastUpdated && <span className="hidden sm:inline">Updated: {lastUpdated.toLocaleTimeString()}</span>}
-          <button
-            onClick={downloadCsv}
-            disabled={loading || jobs.length === 0}
-            className="px-2 py-1 rounded bg-green-600 hover:bg-green-700 text-white font-semibold disabled:opacity-50"
-          >
-            Download CSV
-          </button>
-          <span className="text-neutral-300 hidden sm:inline">Auto every 60s</span>
-        </div>
+      {/* Sub-header: current view label */}
+      <div className="px-4 py-2 text-xs text-gray-500 shrink-0">
+        <span className="font-semibold text-[#111] text-sm">
+          {companyLabel}{!raw && ` — ${stage}${view === 8 ? "" : " · A CFSP ONLY"}`}
+          {raw && monthFilter !== "all" && ` — ${monthOptions.find(o => o.value === monthFilter)?.label ?? ""}`}
+        </span>
       </div>
 
       {error && (
-        <div className="px-4 py-2 bg-red-50 text-red-600 text-xs border-b border-red-200 shrink-0">
+        <div className="mx-4 mb-2 px-4 py-2 afss-pill-error rounded-lg text-xs shrink-0" style={{ borderRadius: 10 }}>
           Error: {error}
         </div>
       )}
       {loading && (
-        <div className="px-4 py-4 text-sm text-neutral-500 shrink-0">
+        <div className="flex items-center gap-3 px-4 py-4 text-sm text-gray-500 shrink-0">
+          <span className="afss-spinner" style={{ width: 18, height: 18, borderWidth: 2 }} />
           <span>Loading {raw ? "data" : `${stage.toLowerCase()} jobs`} for {companyLabel}… ({loadingSecs}s)</span>
           {loadingSecs >= 10 && (
-            <span className="ml-3 text-amber-600">
+            <span className="afss-pill afss-pill-warning">
               Fetching data from SimPRO — this can take up to 2 minutes on first load.
             </span>
           )}
         </div>
       )}
 
-      <div className="flex-1 overflow-auto">
-        <table className="w-full border-collapse" style={{ minWidth: "1800px" }}>
-          <thead className="sticky top-0 z-10">
-            <tr style={{ backgroundColor: "#1e293b" }}>
-              {headers.map((h, i) => (
-                <th key={i} className="text-left text-white font-semibold text-xs uppercase tracking-wide px-3 py-2.5 whitespace-nowrap border-r border-slate-600 last:border-r-0">
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {!loading && jobs.length === 0 && !error && (
+      <div className="flex-1 overflow-auto px-4 pb-4">
+        <div className="afss-card">
+          <table className="afss-table w-full border-collapse" style={{ minWidth: "1800px" }}>
+            <thead className="sticky top-0 z-10">
               <tr>
-                <td colSpan={headers.length} className="px-3 py-8 text-sm text-neutral-400 text-center">
-                  {raw
-                    ? `No data found for ${companyLabel}.`
-                    : `No ${stage.toLowerCase()} jobs found for A CFSP ONLY in ${companyLabel}.`}
-                </td>
+                {headers.map((h, i) => (
+                  <th key={i} className="text-left text-xs px-3 py-2.5 whitespace-nowrap border-r border-r-[#444] last:border-r-0">
+                    {h}
+                  </th>
+                ))}
               </tr>
-            )}
-            {sortedJobs.map((job, row) => {
-              const cells = getRow(job);
-              return (
-                <tr
-                  key={s(job.ID) || row}
-                  className="border-b border-neutral-200 hover:bg-blue-50 transition-colors"
-                  style={{ backgroundColor: row % 2 === 0 ? "#ffffff" : "#f8fafc" }}
-                >
-                  {cells.map((val, col) => (
-                    <td key={col} className="px-3 py-2 text-xs text-neutral-700 border-r border-neutral-100 last:border-r-0 whitespace-nowrap max-w-xs truncate" title={val}>
-                      {col === 1 && val && !raw ? (
-                        <span className="inline-flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dotColor(job) }} />
-                          {val}
-                        </span>
-                      ) : (val || " ")}
-                    </td>
-                  ))}
+            </thead>
+            <tbody>
+              {!loading && jobs.length === 0 && !error && (
+                <tr>
+                  <td colSpan={headers.length} className="px-3 py-8 text-sm text-gray-400 text-center">
+                    {raw
+                      ? `No data found for ${companyLabel}.`
+                      : `No ${stage.toLowerCase()} jobs found for A CFSP ONLY in ${companyLabel}.`}
+                  </td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              )}
+              {sortedJobs.map((job, row) => {
+                const cells = getRow(job);
+                return (
+                  <tr key={s(job.ID) || row} className="border-b transition-colors">
+                    {cells.map((val, col) => (
+                      col === 1 && val && !raw ? (
+                        <td key={col} className="px-3 py-2 text-xs border-r max-w-xs" title={val}>
+                          <span className="afss-pill afss-pill-neutral max-w-full" style={{ borderColor: dotColor(job), color: dotColor(job) }}>
+                            <span className="w-1.5 h-1.5 rounded-full shrink-0 mr-1.5" style={{ backgroundColor: dotColor(job) }} />
+                            <span className="truncate min-w-0">{val}</span>
+                          </span>
+                        </td>
+                      ) : (
+                        <td key={col} className="px-3 py-2 text-xs text-[#333] border-r whitespace-nowrap max-w-xs truncate" title={val}>
+                          {val || " "}
+                        </td>
+                      )
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

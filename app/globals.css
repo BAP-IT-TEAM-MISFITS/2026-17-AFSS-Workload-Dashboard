@@ -1,26 +1,275 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --afss-red: #cc2222;
+  --afss-dark: #1a1a2e;
+  --afss-accent: #e63946;
+  --afss-bg: #f0f2f5;
+
+  --background: var(--afss-bg);
   --foreground: #171717;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-inter);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), 'Inter', sans-serif;
+}
+
+::selection {
+  background: var(--afss-accent);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--afss-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c9ccd6;
+  border-radius: 8px;
+  border: 3px solid var(--afss-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8adbd;
+}
+
+* {
+  scrollbar-color: #c9ccd6 var(--afss-bg);
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--afss-accent);
+  outline-offset: 2px;
+}
+
+.afss-control-bar button:focus-visible,
+.afss-control-bar select:focus-visible,
+.afss-control-bar input:focus-visible,
+.afss-control-bar a:focus-visible {
+  outline-color: #ff7d86;
+}
+
+/* ── Control bar (sticky, dark glass) ── */
+.afss-control-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(26, 26, 46, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.afss-control-bar select option {
+  background: var(--afss-dark);
+  color: #fff;
+}
+
+/* ── Buttons ── */
+.afss-btn {
+  height: 40px;
+  background: linear-gradient(135deg, #ff4d5a, var(--afss-accent));
+  color: white;
+  border: none;
+  padding: 0 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+  letter-spacing: 0.2px;
+}
+
+.afss-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.45);
+}
+
+.afss-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.afss-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.afss-btn-outline {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #4d4d70;
+  color: #ccc;
+  box-shadow: none;
+  padding: 0 18px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.afss-btn-outline:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #6d6d90;
+  color: #fff;
+}
+
+.afss-btn-outline[data-active="true"] {
+  background: rgba(230, 57, 70, 0.15);
+  border-color: var(--afss-accent);
+  color: #fff;
+}
+
+/* ── Inputs / selects on the dark control bar ── */
+.afss-control-bar select.afss-input,
+.afss-control-bar button.afss-input {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.82rem;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.afss-control-bar select.afss-input:focus,
+.afss-control-bar button.afss-input:focus {
+  border-color: var(--afss-accent);
+  background: #2a2a45;
+  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.15);
+}
+
+/* ── Status pills ── */
+.afss-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.afss-pill-neutral {
+  background: #23233b;
+  color: #8e99c5;
+  border: 1px solid #3d3d5c;
+}
+
+.afss-pill-info {
+  background: #1a3a5c;
+  color: #7ec8f5;
+  border: 1px solid #3498db;
+}
+
+.afss-pill-success {
+  background: #102e1f;
+  color: #52cc8a;
+  border: 1px solid #27ae60;
+}
+
+.afss-pill-error {
+  background: #2e1010;
+  color: #cc5252;
+  border: 1px solid #c0392b;
+}
+
+.afss-pill-warning {
+  background: #3a2c0f;
+  color: #f0b84d;
+  border: 1px solid #b8860b;
+}
+
+/* ── Content cards ── */
+.afss-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* ── Tables ── */
+.afss-table thead th {
+  background: #2c2c2c;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.afss-table tbody tr:nth-child(even) td {
+  background: #f9f9f9;
+}
+
+.afss-table tbody tr:hover td {
+  background: #fdeceb;
+}
+
+.afss-table td,
+.afss-table th {
+  border-color: #e8e8e8;
+}
+
+/* ── Compact inline action button (dense tables/toolbars) ── */
+.afss-btn-sm {
+  background: linear-gradient(135deg, #ff4d5a, var(--afss-accent));
+  color: #fff;
+  transition: filter 0.15s ease, opacity 0.15s ease;
+}
+
+.afss-btn-sm:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.afss-btn-sm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Loading spinner ── */
+.afss-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(26, 26, 46, 0.1);
+  border-top-color: var(--afss-accent);
+  border-radius: 50%;
+  animation: afss-spin 0.75s linear infinite;
+}
+
+@keyframes afss-spin {
+  to { transform: rotate(360deg); }
 }

@@ -9,36 +9,39 @@ function LoginContent() {
 
   if (error === 'AccessDenied') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 w-full max-w-md shadow-2xl text-center">
-          <div className="w-16 h-16 bg-red-950 border border-red-800 rounded-full flex items-center justify-center mx-auto mb-5">
-            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'var(--afss-dark)' }}>
+        <div className="afss-card p-8 w-full max-w-md text-center">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 afss-pill-error" style={{ border: '1px solid #c0392b' }}>
+            <svg className="w-8 h-8" style={{ color: 'var(--afss-accent)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M12 15v2m0 0v2m0-2h2m-2 0H10m2-5V9m0 0V7m0 2h2m-2 0H10M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
             </svg>
           </div>
 
-          <h1 className="text-xl font-bold text-white mb-2">Access Denied</h1>
-          <p className="text-gray-400 text-sm leading-relaxed mb-6">
+          <h1 className="text-xl font-bold text-[#111] mb-2">Access Denied</h1>
+          <p className="text-[#666] text-sm leading-relaxed mb-6">
             Your account is not authorised to access the{' '}
-            <span className="text-white font-medium">AFSS Backlog</span> system.
+            <span className="text-[#111] font-semibold">AFSS Backlog</span> system.
             This system is restricted to members of the{' '}
-            <span className="text-white font-medium">Technical AFSS - Deployment</span> group.
+            <span className="text-[#111] font-semibold">Technical AFSS - Deployment</span> group.
           </p>
 
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-6 text-left">
-            <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-3">To request access:</p>
+          <div className="bg-[#f5f5f5] border border-[#e0e0e0] rounded-xl p-4 mb-6 text-left">
+            <p className="text-[#888] text-xs font-bold uppercase tracking-wider mb-3">To request access:</p>
             <div className="flex items-start gap-3">
-              <div className="w-7 h-7 bg-red-600 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div
+                className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                style={{ background: 'linear-gradient(135deg, #ff4d5a, var(--afss-accent))' }}
+              >
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
               <div>
-                <p className="text-white text-sm font-medium">Contact your manager</p>
-                <p className="text-gray-500 text-xs mt-0.5">
-                  Ask to be added to the <span className="text-gray-400">Technical AFSS - Deployment</span> group in Google Workspace.
+                <p className="text-[#111] text-sm font-semibold">Contact your manager</p>
+                <p className="text-[#888] text-xs mt-0.5">
+                  Ask to be added to the <span className="text-[#555]">Technical AFSS - Deployment</span> group in Google Workspace.
                 </p>
               </div>
             </div>
@@ -46,7 +49,7 @@ function LoginContent() {
 
           <button
             onClick={() => signIn('google', { callbackUrl: '/' })}
-            className="w-full text-gray-500 text-xs py-2 hover:text-gray-300 transition-colors cursor-pointer"
+            className="w-full text-[#888] text-xs py-2 hover:text-[#111] transition-colors cursor-pointer"
           >
             Try a different account
           </button>
@@ -56,36 +59,39 @@ function LoginContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950">
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 w-full max-w-sm shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--afss-dark)' }}>
+      <div className="afss-card p-8 w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4"
+            style={{ background: 'linear-gradient(135deg, #ff4d5a, var(--afss-accent))', boxShadow: '0 4px 15px rgba(230, 57, 70, 0.3)' }}
+          >
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <h1 className="text-xl font-bold text-white">AFSS Backlog</h1>
-          <p className="text-gray-500 text-sm mt-1">Red Adair Technical</p>
+          <h1 className="text-xl font-bold text-[#111]">AFSS Backlog</h1>
+          <p className="text-[#888] text-sm mt-1">Red Adair Technical</p>
         </div>
 
         {error && error !== 'AccessDenied' && (
-          <div className="mb-5 p-3 bg-yellow-950 border border-yellow-800 rounded-lg text-yellow-400 text-sm text-center">
+          <div className="mb-5 p-3 bg-[#fff3cd] border border-[#f0d878] rounded-lg text-[#856404] text-sm text-center">
             Sign-in error. Please try again.
           </div>
         )}
 
         <button
           onClick={() => signIn('google', { callbackUrl: '/' })}
-          className="w-full flex items-center justify-center gap-3 bg-white text-gray-900 font-medium py-2.5 px-4 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-center gap-3 bg-white text-[#111] font-medium py-2.5 px-4 rounded-lg border border-[#ddd] hover:bg-[#f5f5f5] active:bg-[#eee] transition-colors cursor-pointer"
         >
           <GoogleIcon />
           Sign in with Google
         </button>
 
-        <p className="text-center text-gray-600 text-xs mt-6 leading-relaxed">
+        <p className="text-center text-[#999] text-xs mt-6 leading-relaxed">
           Access is restricted to members of the<br />
-          <span className="text-gray-500">Technical AFSS - Deployment</span> group.
+          <span className="text-[#888]">Technical AFSS - Deployment</span> group.
         </p>
       </div>
     </div>
