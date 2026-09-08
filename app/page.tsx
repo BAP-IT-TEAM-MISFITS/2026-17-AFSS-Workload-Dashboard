@@ -615,7 +615,7 @@ export default function BacklogPage() {
                     {cells.map((val, col) => (
                       col === 1 && val && !raw ? (
                         <td key={col} className="px-3 py-2 text-xs border-r max-w-xs" title={val}>
-                          <span className="afss-pill afss-pill-neutral max-w-full" style={{ borderColor: dotColor(job), color: dotColor(job) }}>
+                          <span className="afss-pill afss-pill-neutral max-w-full">
                             <span className="w-1.5 h-1.5 rounded-full shrink-0 mr-1.5" style={{ backgroundColor: dotColor(job) }} />
                             <span className="truncate min-w-0">{val}</span>
                           </span>
