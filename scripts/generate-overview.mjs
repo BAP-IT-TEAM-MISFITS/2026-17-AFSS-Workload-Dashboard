@@ -138,7 +138,7 @@ const html = `<!DOCTYPE html>
   </div>
   <div class="meta">
     Live URL: https://bryan-technical-afss-712513641417.australia-southeast1.run.app<br/>
-    Contact: bryan.morales@redadair.com.au
+    Contact: itsystem@redadair.com.au
   </div>
 </div>
 
@@ -400,7 +400,7 @@ const html = `<!DOCTYPE html>
       <tr><td>Language</td><td>TypeScript</td><td>5</td></tr>
       <tr><td>Runtime</td><td>Node.js (Alpine Linux)</td><td>22</td></tr>
       <tr><td>Authentication</td><td>NextAuth</td><td>v4</td></tr>
-      <tr><td>Auth Provider</td><td>Google OAuth 2.0 + Workspace Directory API</td><td>—</td></tr>
+      <tr><td>Auth Provider</td><td>Google OAuth 2.0 + Cloud Identity Groups API</td><td>—</td></tr>
       <tr><td>Primary Data Source</td><td>SimPRO REST API</td><td>v1.0</td></tr>
       <tr><td>Holiday Data</td><td>date.nager.at (NSW Australia)</td><td>—</td></tr>
       <tr><td>Cloud Platform</td><td>Google Cloud Run</td><td>—</td></tr>
@@ -518,12 +518,13 @@ const html = `<!DOCTYPE html>
   </ul>
 
   <h3>9.7 — Authentication Middleware (<code>middleware.ts</code>)</h3>
-  <p>All routes except <code>/login</code> and <code>/api/auth/*</code> are gated. The middleware:</p>
+  <p>All routes except <code>/login</code>, <code>/api/auth/*</code> and <code>/api/warmup</code> are gated. The middleware:</p>
   <ol>
     <li>Checks for a valid NextAuth session cookie</li>
-    <li>Validates the user's email is a member of <code>technicalafss-deployment@redadair.com.au</code> via the Google Workspace Directory API</li>
-    <li>Uses service account <code>afss-group-checker@technical-afss.iam.gserviceaccount.com</code> with subject impersonation for Directory API calls</li>
+    <li>Redirects browser requests to <code>/login</code>, and returns <code>401</code> for <code>/api/*</code>, when no session exists</li>
   </ol>
+  <p>Group membership is <strong>not</strong> re-checked on each request. It is evaluated once at sign-in by the <code>signIn</code> callback in <code>app/lib/auth.ts</code>, which reads <code>technicalafss-deployment@redadair.com.au</code> through the Cloud Identity Groups API using the service account <code>afss-group-checker@technical-afss.iam.gserviceaccount.com</code> &mdash; acting as itself, with no impersonation and no domain-wide delegation.</p>
+  <p>Because the check runs only at sign-in, removing someone from the group takes effect at their next sign-in rather than immediately; existing sessions remain valid until they expire.</p>
 </section>
 
 <!-- ═══════════════════════════════════════════ S10 ══ -->
@@ -588,10 +589,10 @@ const html = `<!DOCTYPE html>
     <thead><tr><th>Step</th><th>Mechanism</th></tr></thead>
     <tbody>
       <tr><td>Login</td><td>Google OAuth 2.0 via NextAuth v4</td></tr>
-      <tr><td>Group check</td><td>Google Workspace Directory API (<code>admin.googleapis.com</code>)</td></tr>
+      <tr><td>Group check</td><td>Cloud Identity Groups API (<code>cloudidentity.googleapis.com</code>)</td></tr>
       <tr><td>Allowed group</td><td><code>technicalafss-deployment@redadair.com.au</code></td></tr>
       <tr><td>Service account</td><td><code>afss-group-checker@technical-afss.iam.gserviceaccount.com</code></td></tr>
-      <tr><td>Admin impersonation</td><td><code>bryan.morales@redadair.com.au</code></td></tr>
+      <tr><td>Group read access</td><td>Service account is a <strong>member</strong> of the allowed group &mdash; no impersonation, no domain-wide delegation</td></tr>
       <tr><td>Session storage</td><td>NextAuth JWT (cookie-based)</td></tr>
       <tr><td>Middleware scope</td><td>All routes except <code>/login</code> and <code>/api/auth/*</code></td></tr>
     </tbody>
@@ -620,7 +621,6 @@ NEXTAUTH_URL_PRODUCTION=https://&lt;cloud-run-url&gt;
 # Google Workspace service account
 GOOGLE_SERVICE_ACCOUNT_EMAIL=afss-group-checker@technical-afss.iam.gserviceaccount.com
 GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----...
-GOOGLE_ADMIN_EMAIL=bryan.morales@redadair.com.au
 
 # Optional — production only
 CACHE_DIR=/path/to/gcs-volume</pre>

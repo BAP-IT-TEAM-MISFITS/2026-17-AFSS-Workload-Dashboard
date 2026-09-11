@@ -4,7 +4,7 @@
 **Last Updated:** June 2026  
 **Live URL:** https://bryan-technical-afss-712513641417.australia-southeast1.run.app  
 **Owner:** Red Adair — Technical AFSS Team  
-**Contact:** bryan.morales@redadair.com.au
+**Contact:** itsystem@redadair.com.au
 
 ---
 
@@ -165,7 +165,7 @@ Browser  →  Next.js App Router (Cloud Run, australia-southeast1)
 | Language | TypeScript | 5 |
 | Runtime | Node.js (Alpine) | 22 |
 | Authentication | NextAuth | v4 |
-| Auth Provider | Google OAuth 2.0 + Workspace Directory API | — |
+| Auth Provider | Google OAuth 2.0 + Cloud Identity Groups API | — |
 | Primary Data | SimPRO REST API | v1.0 |
 | Holiday Data | date.nager.at | — |
 | Cloud Platform | Google Cloud Run | — |
@@ -230,10 +230,19 @@ SimPRO enforces strict per-token rate limits (HTTP 429). The app implements:
 
 ### 9.7 Authentication Middleware (`middleware.ts`)
 
-All routes except `/login` and `/api/auth/*` are gated. The middleware:
+All routes except `/login`, `/api/auth/*` and `/api/warmup` are gated. The middleware:
 1. Checks for a valid NextAuth session cookie
-2. Validates that the user's email is a member of `technicalafss-deployment@redadair.com.au` via the Google Workspace Directory API
-3. Uses a service account (`afss-group-checker@technical-afss.iam.gserviceaccount.com`) with subject impersonation for Directory API calls
+2. Redirects browser requests to `/login`, and returns `401` for `/api/*`, when no session exists
+
+Group membership is **not** re-checked on each request. It is evaluated once at
+sign-in by the `signIn` callback in `app/lib/auth.ts`, which reads
+`technicalafss-deployment@redadair.com.au` through the Cloud Identity Groups API
+using the service account `afss-group-checker@technical-afss.iam.gserviceaccount.com`
+— acting as itself, with no impersonation and no domain-wide delegation.
+
+Because the check runs only at sign-in, removing someone from the group takes
+effect at their next sign-in rather than immediately; existing sessions remain
+valid until they expire.
 
 ---
 
@@ -285,10 +294,10 @@ All caching is disk-based. In development the cache location defaults to `os.tmp
 | Step | Mechanism |
 |---|---|
 | Login | Google OAuth 2.0 via NextAuth v4 |
-| Group check | Google Workspace Directory API (`admin.googleapis.com`) |
+| Group check | Cloud Identity Groups API (`cloudidentity.googleapis.com`) |
 | Allowed group | `technicalafss-deployment@redadair.com.au` |
 | Service account | `afss-group-checker@technical-afss.iam.gserviceaccount.com` |
-| Admin impersonation | `bryan.morales@redadair.com.au` |
+| Group read access | Service account is a **member** of the allowed group — no impersonation, no domain-wide delegation |
 | Session storage | NextAuth JWT (cookie-based) |
 | Middleware scope | All routes except `/login` and `/api/auth/*` |
 
@@ -313,7 +322,6 @@ NEXTAUTH_URL_PRODUCTION=https://<cloud-run-url>
 # Google Workspace service account
 GOOGLE_SERVICE_ACCOUNT_EMAIL=afss-group-checker@technical-afss.iam.gserviceaccount.com
 GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----...
-GOOGLE_ADMIN_EMAIL=bryan.morales@redadair.com.au
 
 # Optional — production only
 CACHE_DIR=/path/to/gcs-volume
