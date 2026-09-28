@@ -543,7 +543,7 @@ export default function BacklogPage() {
       </div>
 
       {/* Sub-header: title + controls */}
-      <div className="workspace-heading text-xs text-[#52525b] shrink-0">
+      <div className="workspace-heading text-xs shrink-0">
         <div className="flex items-center gap-3 min-w-0">
           <div className="min-w-0">
             <span className="workspace-kicker">{raw ? "SOURCE DATA / DETAIL VIEW" : "WORK QUEUE / JOB BACKLOG"}</span>
@@ -559,12 +559,12 @@ export default function BacklogPage() {
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {refreshing && <span className="text-[#dc2626]">Syncing…</span>}
+          {refreshing && <span className="text-[#fee2e2]">Syncing…</span>}
           {lastUpdated && <span className="hidden sm:inline">Updated: {lastUpdated.toLocaleTimeString()}</span>}
           <button
             onClick={downloadCsv}
             disabled={loading || jobs.length === 0}
-            className="px-2 py-1 rounded bg-[#dc2626] hover:bg-[#b91c1c] text-white font-semibold disabled:opacity-50"
+            className="heading-action px-2 py-1 rounded disabled:opacity-50"
           >
             Download CSV
           </button>
