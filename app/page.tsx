@@ -408,7 +408,7 @@ export default function BacklogPage() {
 
   const stageColor = raw
     ? "bg-purple-100 text-purple-700"
-    : stage === "Pending" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700";
+    : stage === "Pending" ? "bg-amber-100 text-amber-700" : "bg-[#f6e0d6] text-[#71302a]";
 
   const headers = isRawView(view)
     ? RAW_HEADERS[view]
@@ -449,18 +449,18 @@ export default function BacklogPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen" onClick={() => setDropdownOpen(false)}>
+    <div className="flex flex-col h-screen bg-[#fffaf7]" onClick={() => setDropdownOpen(false)}>
 
       {/* Top bar: company dropdown + stage tabs */}
-      <div className="flex flex-wrap items-stretch bg-white border-b border-neutral-200 shrink-0">
+      <div className="flex flex-wrap items-stretch bg-[#fffdfb] border-b border-[#e6cbc0] shrink-0">
 
         {/* Company dropdown */}
         <div className="relative w-full sm:w-auto border-b sm:border-b-0" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => setDropdownOpen((o) => !o)}
-            className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-neutral-800 hover:bg-neutral-50 sm:border-r sm:border-neutral-200 w-full sm:min-w-[180px]"
+            className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-[#52221f] hover:bg-[#f9eae4] sm:border-r sm:border-[#e6cbc0] w-full sm:min-w-[180px]"
           >
-            <span className="w-3 h-3 rounded-sm bg-red-500 shrink-0" />
+            <span className="w-3 h-3 rounded-sm bg-[#963f33] shrink-0" />
             {companyLabel}
             <svg className="ml-auto w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -468,19 +468,19 @@ export default function BacklogPage() {
           </button>
 
           {dropdownOpen && (
-            <div className="absolute top-full left-0 z-50 bg-white border border-neutral-200 rounded-b shadow-lg w-full sm:min-w-[220px]">
+            <div className="absolute top-full left-0 z-50 bg-[#fffdfb] border border-[#e6cbc0] rounded-b shadow-lg w-full sm:min-w-[220px]">
               {COMPANIES.map((co) => (
                 <button
                   key={co.id}
                   onClick={() => { setView(co.id); setDropdownOpen(false); }}
-                  className={`w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-neutral-50 ${
-                    co.id === view ? "font-semibold text-blue-600" : "text-neutral-700"
+                  className={`w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-[#f9eae4] ${
+                    co.id === view ? "font-semibold text-[#87372e]" : "text-neutral-700"
                   }`}
                 >
-                  <span className="w-3 h-3 rounded-sm bg-red-500 shrink-0" />
+                  <span className="w-3 h-3 rounded-sm bg-[#963f33] shrink-0" />
                   {co.label}
                   {co.id === view && (
-                    <svg className="ml-auto w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="ml-auto w-4 h-4 text-[#963f33]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   )}
@@ -494,14 +494,14 @@ export default function BacklogPage() {
                 <button
                   key={v.id}
                   onClick={() => { setView(v.id); setDropdownOpen(false); }}
-                  className={`w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-neutral-50 ${
-                    v.id === view ? "font-semibold text-blue-600" : "text-neutral-700"
+                  className={`w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-[#f9eae4] ${
+                    v.id === view ? "font-semibold text-[#87372e]" : "text-neutral-700"
                   }`}
                 >
                   <span className="w-3 h-3 rounded-sm bg-purple-500 shrink-0" />
                   {v.label}
                   {v.id === view && (
-                    <svg className="ml-auto w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="ml-auto w-4 h-4 text-[#963f33]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   )}
@@ -515,7 +515,7 @@ export default function BacklogPage() {
         <select
           defaultValue=""
           onChange={e => { if (e.target.value) window.location.href = e.target.value; }}
-          className="px-5 py-3 text-sm font-medium text-neutral-500 hover:text-neutral-800 border-b sm:border-b-0 sm:border-r border-neutral-200 hover:bg-neutral-50 bg-white cursor-pointer w-full sm:w-auto"
+          className="px-5 py-3 text-sm font-medium text-[#725650] hover:text-[#52221f] border-b sm:border-b-0 sm:border-r border-[#e6cbc0] hover:bg-[#f9eae4] bg-[#fffdfb] cursor-pointer w-full sm:w-auto"
         >
           <option value="" disabled hidden>Dashboard</option>
           <option value="/dashboard">Dashboard</option>
@@ -531,7 +531,7 @@ export default function BacklogPage() {
                 onClick={() => setStage(st)}
                 className={`flex-1 sm:flex-none px-5 py-3 text-sm font-medium border-b-2 transition-colors ${
                   st === stage
-                    ? "border-blue-600 text-blue-600"
+                    ? "border-[#963f33] text-[#71302a] bg-[#f9eae4]"
                     : "border-transparent text-neutral-500 hover:text-neutral-800 hover:border-neutral-300"
                 }`}
               >
@@ -543,7 +543,7 @@ export default function BacklogPage() {
       </div>
 
       {/* Sub-header: title + controls */}
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-2 bg-white border-b border-neutral-200 text-xs text-neutral-500 shrink-0">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-2 bg-[#fff6f0] border-b border-[#e6cbc0] text-xs text-[#725650] shrink-0">
         <div className="flex items-center gap-3 min-w-0">
           <span className="font-semibold text-neutral-800 text-sm truncate">
             {companyLabel}{!raw && ` — ${stage}${view === 8 ? "" : " · A CFSP ONLY"}`}
@@ -556,12 +556,12 @@ export default function BacklogPage() {
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {refreshing && <span className="text-blue-500">Syncing…</span>}
+          {refreshing && <span className="text-[#963f33]">Syncing…</span>}
           {lastUpdated && <span className="hidden sm:inline">Updated: {lastUpdated.toLocaleTimeString()}</span>}
           <button
             onClick={downloadCsv}
             disabled={loading || jobs.length === 0}
-            className="px-2 py-1 rounded bg-green-600 hover:bg-green-700 text-white font-semibold disabled:opacity-50"
+            className="px-2 py-1 rounded bg-[#963f33] hover:bg-[#7d3028] text-white font-semibold disabled:opacity-50"
           >
             Download CSV
           </button>
@@ -588,9 +588,9 @@ export default function BacklogPage() {
       <div className="flex-1 overflow-auto">
         <table className="w-full border-collapse" style={{ minWidth: "1800px" }}>
           <thead className="sticky top-0 z-10">
-            <tr style={{ backgroundColor: "#1e293b" }}>
+            <tr style={{ backgroundColor: "#52221f" }}>
               {headers.map((h, i) => (
-                <th key={i} className="text-left text-white font-semibold text-xs uppercase tracking-wide px-3 py-2.5 whitespace-nowrap border-r border-slate-600 last:border-r-0">
+                <th key={i} className="text-left text-white font-semibold text-xs uppercase tracking-wide px-3 py-2.5 whitespace-nowrap border-r border-[#844840] last:border-r-0">
                   {h}
                 </th>
               ))}
@@ -611,8 +611,7 @@ export default function BacklogPage() {
               return (
                 <tr
                   key={s(job.ID) || row}
-                  className="border-b border-neutral-200 hover:bg-blue-50 transition-colors"
-                  style={{ backgroundColor: row % 2 === 0 ? "#ffffff" : "#f8fafc" }}
+                  className={`border-b border-[#f1e2dc] hover:bg-[#f9eae4] transition-colors ${row % 2 === 0 ? "bg-[#fffdfb]" : "bg-[#fbf4f0]"}`}
                 >
                   {cells.map((val, col) => (
                     <td key={col} className="px-3 py-2 text-xs text-neutral-700 border-r border-neutral-100 last:border-r-0 whitespace-nowrap max-w-xs truncate" title={val}>

@@ -4,8 +4,15 @@
   /* The app is light-only. `color-scheme` keeps browser-rendered controls
      (selects, inputs, scrollbars) light even when the OS prefers dark. */
   color-scheme: light;
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fffaf7;
+  --foreground: #2f211f;
+  --fire-deep: #52221f;
+  --fire-dark: #71302a;
+  --fire: #963f33;
+  --fire-hover: #7d3028;
+  --fire-soft: #f9eae4;
+  --fire-border: #e6cbc0;
+  --fire-muted: #725650;
 }
 
 @theme inline {
@@ -19,4 +26,14 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: #e9b9a7;
+  color: var(--fire-deep);
+}
+
+:where(button, select, input, a):focus-visible {
+  outline: 2px solid var(--fire);
+  outline-offset: 2px;
 }

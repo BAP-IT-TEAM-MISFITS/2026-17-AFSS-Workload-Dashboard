@@ -10,7 +10,7 @@ export default function UserBar() {
   if (!session || pathname === '/login') return null
 
   return (
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-1.5 bg-white border-b border-gray-200 text-xs text-gray-500 min-w-0">
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-2 bg-[#fffdfb] border-t-[3px] border-t-[#963f33] border-b border-b-[#e6cbc0] text-xs text-[#725650] min-w-0">
       <div />
       <div className="flex items-center gap-4 justify-self-center">
         <Image
@@ -32,7 +32,7 @@ export default function UserBar() {
         <span className="truncate min-w-0">{session.user?.email}</span>
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="text-gray-500 hover:text-gray-900 transition-colors cursor-pointer"
+          className="text-[#71302a] hover:text-[#52221f] transition-colors cursor-pointer font-semibold"
         >
           Sign out
         </button>
