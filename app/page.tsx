@@ -452,7 +452,7 @@ export default function BacklogPage() {
     <div className="flex flex-col h-screen bg-[#fff8f8]" onClick={() => setDropdownOpen(false)}>
 
       {/* Top bar: company dropdown + stage tabs */}
-      <div className="flex flex-wrap items-stretch bg-[#fff0f1] border-b border-[#efb4b4] shrink-0">
+      <div className="workspace-nav flex flex-wrap items-stretch shrink-0">
 
         {/* Company dropdown */}
         <div className="relative w-full sm:w-auto border-b sm:border-b-0" onClick={(e) => e.stopPropagation()}>
@@ -515,7 +515,7 @@ export default function BacklogPage() {
         <select
           defaultValue=""
           onChange={e => { if (e.target.value) window.location.href = e.target.value; }}
-          className="px-5 py-3 text-sm font-medium text-[#704147] hover:text-[#7f1d1d] border-b sm:border-b-0 sm:border-r border-[#efb4b4] hover:bg-[#ffe4e6] bg-[#fff0f1] cursor-pointer w-full sm:w-auto"
+          className="px-5 py-3 text-sm font-medium text-[#704147] hover:text-[#7f1d1d] border-b sm:border-b-0 sm:border-r border-[#efb4b4] hover:bg-[#ffe4e6] bg-white cursor-pointer w-full sm:w-auto"
         >
           <option value="" disabled hidden>Dashboard</option>
           <option value="/dashboard">Dashboard</option>
@@ -543,12 +543,15 @@ export default function BacklogPage() {
       </div>
 
       {/* Sub-header: title + controls */}
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-2 bg-[#fff0f1] border-b border-[#efb4b4] text-xs text-[#704147] shrink-0">
+      <div className="workspace-heading text-xs text-[#704147] shrink-0">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="font-semibold text-neutral-800 text-sm truncate">
-            {companyLabel}{!raw && ` — ${stage}${view === 8 ? "" : " · A CFSP ONLY"}`}
-            {raw && monthFilter !== "all" && ` — ${monthOptions.find(o => o.value === monthFilter)?.label ?? ""}`}
-          </span>
+          <div className="min-w-0">
+            <span className="workspace-kicker">{raw ? "SOURCE DATA / DETAIL VIEW" : "WORK QUEUE / JOB BACKLOG"}</span>
+            <h1 className="workspace-title truncate">
+              {companyLabel}{!raw && ` — ${stage}${view === 8 ? "" : " · A CFSP ONLY"}`}
+              {raw && monthFilter !== "all" && ` — ${monthOptions.find(o => o.value === monthFilter)?.label ?? ""}`}
+            </h1>
+          </div>
           {!loading && (
             <span className={`px-2 py-0.5 rounded-full font-semibold text-xs shrink-0 ${stageColor}`}>
               {jobs.length} job{jobs.length !== 1 ? "s" : ""}
@@ -585,8 +588,8 @@ export default function BacklogPage() {
         </div>
       )}
 
-      <div className="flex-1 overflow-auto">
-        <table className="w-full border-collapse" style={{ minWidth: "1800px" }}>
+      <div className="workspace-table-wrap flex-1 overflow-auto">
+        <table className="workspace-table w-full border-collapse" style={{ minWidth: "1800px" }}>
           <thead className="sticky top-0 z-10">
             <tr style={{ backgroundColor: "#7f1d1d" }}>
               {headers.map((h, i) => (

@@ -10,7 +10,8 @@ function LoginContent() {
   if (error === 'AccessDenied') {
     return (
       <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#991b1b_0%,#450a0a_58%,#2b0b0f_100%)]">
-        <div className="bg-[#4c1117] border border-[#9f3944] border-t-4 border-t-[#dc2626] rounded-2xl p-8 w-full max-w-md shadow-2xl text-center">
+        <div className="auth-card bg-[#4c1117] border border-[#9f3944] border-t-4 border-t-[#dc2626] rounded-2xl p-8 w-full max-w-md shadow-2xl text-center">
+          <span className="auth-kicker">RED ADAIR / AFSS CONTROL DESK</span>
           <div className="w-16 h-16 bg-[#7f1d1d] border border-[#c24148] rounded-full flex items-center justify-center mx-auto mb-5">
             <svg className="w-8 h-8 text-[#fda4af]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -57,7 +58,8 @@ function LoginContent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#991b1b_0%,#450a0a_58%,#2b0b0f_100%)]">
-      <div className="bg-[#4c1117] border border-[#9f3944] border-t-4 border-t-[#dc2626] rounded-2xl p-8 w-full max-w-sm shadow-2xl">
+      <div className="auth-card bg-[#4c1117] border border-[#9f3944] border-t-4 border-t-[#dc2626] rounded-2xl p-8 w-full max-w-sm shadow-2xl">
+        <span className="auth-kicker">RED ADAIR / AFSS CONTROL DESK</span>
         <div className="text-center mb-8">
           <div className="w-12 h-12 bg-[#b91c1c] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_24px_rgba(220,38,38,0.4)]">
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

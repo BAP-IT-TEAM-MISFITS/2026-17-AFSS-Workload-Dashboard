@@ -10,9 +10,15 @@ export default function UserBar() {
   if (!session || pathname === '/login') return null
 
   return (
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-2 bg-[#fffdfd] border-t-[3px] border-t-[#b91c1c] border-b border-b-[#efb4b4] text-xs text-[#704147] min-w-0">
-      <div />
-      <div className="flex items-center gap-4 justify-self-center">
+    <header className="app-masthead">
+      <div className="masthead-identity">
+        <span className="masthead-monogram" aria-hidden="true">AF</span>
+        <div className="min-w-0">
+          <span className="masthead-eyebrow">RED ADAIR / TECHNICAL</span>
+          <div className="masthead-title">AFSS Control Desk</div>
+        </div>
+      </div>
+      <div className="masthead-logos">
         <Image
           src="/logo-evacuation.png"
           alt="Adair Evacuation Consultants"
@@ -28,15 +34,16 @@ export default function UserBar() {
           className="h-8 w-auto object-contain"
         />
       </div>
-      <div className="flex items-center gap-3 min-w-0 justify-self-end">
+      <div className="masthead-account">
+        <span className="masthead-account-label">SIGNED IN</span>
         <span className="truncate min-w-0">{session.user?.email}</span>
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="text-[#991b1b] hover:text-[#7f1d1d] transition-colors cursor-pointer font-semibold"
+          className="masthead-signout"
         >
           Sign out
         </button>
       </div>
-    </div>
+    </header>
   )
 }

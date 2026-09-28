@@ -925,7 +925,7 @@ export default function Dashboard2Page() {
   return (
     <div className="flex flex-col bg-[#fff8f8]">
       {/* Nav */}
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2.5 bg-[#fff0f1] border-b border-[#efb4b4] shrink-0">
+      <div className="workspace-nav flex flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2.5 shrink-0">
         <Link href="/" className="text-sm text-[#a31621] hover:underline font-medium shrink-0">← Backlog</Link>
         <select
           defaultValue="/dashboard2"
@@ -956,8 +956,16 @@ export default function Dashboard2Page() {
         </select>
       </div>
 
+      <div className="workspace-heading">
+        <div>
+          <span className="workspace-kicker">AFSS / CAPACITY &amp; DEMAND</span>
+          <h1 className="workspace-title">Workload overview</h1>
+        </div>
+        <span className="workspace-kicker">NO DATACOM</span>
+      </div>
+
       <div className="p-4 w-full overflow-x-auto">
-        <table className="border-collapse w-full table-fixed" style={{ minWidth: '860px' }}>
+        <table className="workspace-table workspace-table-wrap border-collapse w-full table-fixed" style={{ minWidth: '860px' }}>
           <thead>
             {/* Row 1 */}
             <tr>
