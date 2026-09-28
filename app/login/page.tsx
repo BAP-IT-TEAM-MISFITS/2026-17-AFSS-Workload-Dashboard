@@ -9,10 +9,10 @@ function LoginContent() {
 
   if (error === 'AccessDenied') {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#991b1b_0%,#450a0a_58%,#2b0b0f_100%)]">
-        <div className="auth-card bg-[#4c1117] border border-[#9f3944] border-t-4 border-t-[#dc2626] rounded-2xl p-8 w-full max-w-md shadow-2xl text-center">
+      <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#ef4444_0%,#dc2626_58%,#b91c1c_100%)]">
+        <div className="auth-card bg-[#b91c1c] border border-[#fca5a5] border-t-4 border-t-[#dc2626] rounded-2xl p-8 w-full max-w-md shadow-2xl text-center">
           <span className="auth-kicker">RED ADAIR / AFSS CONTROL DESK</span>
-          <div className="w-16 h-16 bg-[#7f1d1d] border border-[#c24148] rounded-full flex items-center justify-center mx-auto mb-5">
+          <div className="w-16 h-16 bg-[#b91c1c] border border-[#ef4444] rounded-full flex items-center justify-center mx-auto mb-5">
             <svg className="w-8 h-8 text-[#fda4af]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M12 15v2m0 0v2m0-2h2m-2 0H10m2-5V9m0 0V7m0 2h2m-2 0H10M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
@@ -27,10 +27,10 @@ function LoginContent() {
             <span className="text-white font-medium">Technical AFSS - Deployment</span> group.
           </p>
 
-          <div className="bg-[#661d25] border border-[#a63b48] rounded-xl p-4 mb-6 text-left">
+          <div className="bg-[#991b1b] border border-[#f87171] rounded-xl p-4 mb-6 text-left">
             <p className="text-[#fecdd3] text-xs font-medium uppercase tracking-wider mb-3">To request access:</p>
             <div className="flex items-start gap-3">
-              <div className="w-7 h-7 bg-[#b91c1c] rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-7 h-7 bg-[#dc2626] rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -57,11 +57,11 @@ function LoginContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#991b1b_0%,#450a0a_58%,#2b0b0f_100%)]">
-      <div className="auth-card bg-[#4c1117] border border-[#9f3944] border-t-4 border-t-[#dc2626] rounded-2xl p-8 w-full max-w-sm shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#ef4444_0%,#dc2626_58%,#b91c1c_100%)]">
+      <div className="auth-card bg-[#b91c1c] border border-[#fca5a5] border-t-4 border-t-[#dc2626] rounded-2xl p-8 w-full max-w-sm shadow-2xl">
         <span className="auth-kicker">RED ADAIR / AFSS CONTROL DESK</span>
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-[#b91c1c] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_24px_rgba(220,38,38,0.4)]">
+          <div className="w-12 h-12 bg-[#dc2626] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_24px_rgba(220,38,38,0.4)]">
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M12 21c4.4 0 8-3.6 8-8 0-3.4-1.8-6.1-5-8-.2 2.4-1.4 4-3 4-1-3-1.4-5.5-.4-8C7.1 4.4 4 8.2 4 13c0 4.4 3.6 8 8 8Z" />
@@ -72,7 +72,7 @@ function LoginContent() {
         </div>
 
         {error && error !== 'AccessDenied' && (
-          <div className="mb-5 p-3 bg-[#5c3a24] border border-[#a5794b] rounded-lg text-[#f5d5a4] text-sm text-center">
+          <div className="mb-5 p-3 bg-[#991b1b] border border-[#f87171] rounded-lg text-[#fee2e2] text-sm text-center">
             Sign-in error. Please try again.
           </div>
         )}
