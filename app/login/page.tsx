@@ -9,11 +9,11 @@ function LoginContent() {
 
   if (error === 'AccessDenied') {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#ef4444_0%,#e11d2e_58%,#d71920_100%)]">
-        <div className="auth-card bg-white border border-[#fecaca] border-t-4 border-t-[#e11d2e] rounded-2xl p-8 w-full max-w-md shadow-2xl text-center">
+      <div className="auth-screen min-h-screen flex items-center justify-center px-4">
+        <div className="auth-card border border-[#e8d8d5] border-t-4 border-t-[#c94437] rounded-2xl p-8 w-full max-w-md shadow-2xl text-center">
           <span className="auth-kicker">RED ADAIR / AFSS CONTROL DESK</span>
-          <div className="w-16 h-16 bg-[#fee2e2] border border-[#fecaca] rounded-full flex items-center justify-center mx-auto mb-5">
-            <svg className="w-8 h-8 text-[#d71920]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-16 h-16 bg-[#fff1eb] border border-[#e8d8d5] rounded-full flex items-center justify-center mx-auto mb-5">
+            <svg className="w-8 h-8 text-[#9f202d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M12 15v2m0 0v2m0-2h2m-2 0H10m2-5V9m0 0V7m0 2h2m-2 0H10M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
             </svg>
@@ -27,10 +27,10 @@ function LoginContent() {
             <span className="text-[#111827] font-medium">Technical AFSS - Deployment</span> group.
           </p>
 
-          <div className="bg-[#fef2f2] border border-[#fecaca] rounded-xl p-4 mb-6 text-left">
-            <p className="text-[#d71920] text-xs font-medium uppercase tracking-wider mb-3">To request access:</p>
+          <div className="bg-[#fff4ef] border border-[#e8d8d5] rounded-xl p-4 mb-6 text-left">
+            <p className="text-[#9f202d] text-xs font-medium uppercase tracking-wider mb-3">To request access:</p>
             <div className="flex items-start gap-3">
-              <div className="w-7 h-7 bg-[#e11d2e] rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-7 h-7 bg-[#c94437] rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -39,7 +39,7 @@ function LoginContent() {
               <div>
                 <p className="text-[#111827] text-sm font-medium">Contact your manager</p>
                 <p className="text-[#475569] text-xs mt-0.5">
-                  Ask to be added to the <span className="text-[#d71920]">Technical AFSS - Deployment</span> group in Google Workspace.
+                  Ask to be added to the <span className="text-[#9f202d]">Technical AFSS - Deployment</span> group in Google Workspace.
                 </p>
               </div>
             </div>
@@ -47,7 +47,7 @@ function LoginContent() {
 
           <button
             onClick={() => signIn('google', { callbackUrl: '/' })}
-            className="w-full text-[#d71920] text-xs py-2 hover:text-[#c91f26] transition-colors cursor-pointer"
+            className="w-full text-[#9f202d] text-xs py-2 hover:text-[#7b1a26] transition-colors cursor-pointer"
           >
             Try a different account
           </button>
@@ -57,11 +57,11 @@ function LoginContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#ef4444_0%,#e11d2e_58%,#d71920_100%)]">
-      <div className="auth-card bg-white border border-[#fecaca] border-t-4 border-t-[#e11d2e] rounded-2xl p-8 w-full max-w-sm shadow-2xl">
+    <div className="auth-screen min-h-screen flex items-center justify-center px-4">
+      <div className="auth-card border border-[#e8d8d5] border-t-4 border-t-[#c94437] rounded-2xl p-8 w-full max-w-sm shadow-2xl">
         <span className="auth-kicker">RED ADAIR / AFSS CONTROL DESK</span>
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-[#e11d2e] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_24px_rgba(220,38,38,0.4)]">
+          <div className="w-12 h-12 bg-[#c94437] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_24px_rgba(220,38,38,0.4)]">
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M12 21c4.4 0 8-3.6 8-8 0-3.4-1.8-6.1-5-8-.2 2.4-1.4 4-3 4-1-3-1.4-5.5-.4-8C7.1 4.4 4 8.2 4 13c0 4.4 3.6 8 8 8Z" />
@@ -72,7 +72,7 @@ function LoginContent() {
         </div>
 
         {error && error !== 'AccessDenied' && (
-          <div className="mb-5 p-3 bg-[#fef2f2] border border-[#fecaca] rounded-lg text-[#d71920] text-sm text-center">
+          <div className="mb-5 p-3 bg-[#fff4ef] border border-[#e8d8d5] rounded-lg text-[#9f202d] text-sm text-center">
             Sign-in error. Please try again.
           </div>
         )}
@@ -87,7 +87,7 @@ function LoginContent() {
 
         <p className="text-center text-[#475569] text-xs mt-6 leading-relaxed">
           Access is restricted to members of the<br />
-          <span className="text-[#d71920]">Technical AFSS - Deployment</span> group.
+          <span className="text-[#9f202d]">Technical AFSS - Deployment</span> group.
         </p>
       </div>
     </div>

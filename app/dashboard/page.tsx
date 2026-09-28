@@ -905,16 +905,16 @@ export default function DashboardPage() {
     supplyMonths.map(({ year, month }) => leaveReasonsForMonth(member, year, month)).filter(Boolean).join(" · ");
 
   const TH = ({ children }: { children: React.ReactNode }) => (
-    <th className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-semibold bg-[#e11d2e] text-white">
+    <th className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-semibold bg-[#c94437] text-white">
       {children}
     </th>
   );
 
   return (
-    <div className="flex flex-col bg-[#f8fafc]">
+    <div className="flex flex-col bg-[#faf8f6]">
       {/* Nav */}
       <div className="workspace-nav flex flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2.5 shrink-0">
-        <Link href="/" className="text-sm text-[#d71920] hover:underline font-medium shrink-0">← Backlog</Link>
+        <Link href="/" className="text-sm text-[#9f202d] hover:underline font-medium shrink-0">← Backlog</Link>
         <select
           defaultValue="/dashboard"
           onChange={e => { window.location.href = e.target.value; }}
@@ -924,11 +924,11 @@ export default function DashboardPage() {
           <option value="/dashboard2">Dashboard (NO DATACOM)</option>
         </select>
         <span className="flex-1 min-w-0 flex flex-wrap items-center gap-x-2 gap-y-1 overflow-hidden">
-          {loading && !hasData && <span className="text-xs text-[#e11d2e] animate-pulse shrink-0">Loading…</span>}
+          {loading && !hasData && <span className="text-xs text-[#c94437] animate-pulse shrink-0">Loading…</span>}
           {updated && !loading && (
             <span className="text-xs text-neutral-400 shrink-0">Updated: {updated.toLocaleTimeString()}</span>
           )}
-          {syncing && !loading && <span className="text-xs text-[#e11d2e] animate-pulse shrink-0">Syncing…</span>}
+          {syncing && !loading && <span className="text-xs text-[#c94437] animate-pulse shrink-0">Syncing…</span>}
           <span className="text-xs text-neutral-400 truncate">
             {hasData && `${visibleAll.length} total jobs${monthFilter !== "all" ? ` in ${monthOptions.find(o => o.value === monthFilter)?.label ?? ""}` : " across all companies"}`}
           </span>
@@ -952,7 +952,7 @@ export default function DashboardPage() {
         <span className="workspace-kicker">ALL COMPANIES</span>
       </div>
 
-      <div className="p-4 w-full overflow-x-auto">
+      <div className="analytics-table-frame p-4 w-full overflow-x-auto">
         <table className="workspace-table workspace-table-wrap border-collapse w-full table-fixed" style={{ minWidth: '860px' }}>
           <thead>
             {/* Row 1 */}
@@ -960,7 +960,7 @@ export default function DashboardPage() {
               <td
                 rowSpan={3}
                 className="border border-[#e5e7eb] p-4 text-center align-middle font-bold text-xl"
-                style={{ backgroundColor: "#d71920", color: "#fff", width: "14%" }}
+                style={{ backgroundColor: "#301115", color: "#fff", width: "14%" }}
               >
                 TECH TEAM WORKS
               </td>
@@ -968,11 +968,11 @@ export default function DashboardPage() {
                 colSpan={3}
                 rowSpan={2}
                 className="border border-[#e5e7eb] px-3 py-4 text-center text-sm font-medium"
-                style={{ backgroundColor: "#d71920", color: "#fff", width: "21%" }}
+                style={{ backgroundColor: "#301115", color: "#fff", width: "21%" }}
               >
                 Work Demand (Total)
               </td>
-              <td colSpan={9} className="border border-[#e5e7eb] px-3 py-3 text-center font-bold text-base bg-[#d71920] text-white">
+              <td colSpan={9} className="border border-[#e5e7eb] px-3 py-3 text-center font-bold text-base bg-[#301115] text-white">
                 AFSS AUDITS
               </td>
             </tr>
@@ -983,7 +983,7 @@ export default function DashboardPage() {
                   key={co.id}
                   colSpan={3}
                   className="border border-[#e5e7eb] px-2 py-3 text-center text-sm font-semibold whitespace-pre-line"
-                  style={{ backgroundColor: "#d71920", color: "#fff", width: "21%" }}
+                  style={{ backgroundColor: "#301115", color: "#fff", width: "21%" }}
                 >
                   {co.label}
                 </td>
@@ -1006,7 +1006,7 @@ export default function DashboardPage() {
               <tr>
                 <td
                   colSpan={13}
-                  className="border border-[#e5e7eb] px-4 py-8 text-center text-sm text-[#e11d2e] animate-pulse"
+                  className="border border-[#e5e7eb] px-4 py-8 text-center text-sm text-[#c94437] animate-pulse"
                 >
                   Loading data from SimPRO…
                 </td>
@@ -1017,7 +1017,7 @@ export default function DashboardPage() {
                 <tr>
                   <td
                     className="border border-[#e5e7eb] px-3 py-3 text-sm font-bold italic"
-                    style={{ backgroundColor: "#f8fafc" }}
+                    style={{ backgroundColor: "#faf8f6" }}
                   >
                     Total Backlog as at end of period
                   </td>
@@ -1033,7 +1033,7 @@ export default function DashboardPage() {
                   <td
                     colSpan={13}
                     className="border border-[#e5e7eb] px-2 py-1 text-center text-sm italic text-gray-500"
-                    style={{ backgroundColor: "#f8fafc" }}
+                    style={{ backgroundColor: "#faf8f6" }}
                   >
                     {monthFilter !== "all" ? (monthOptions.find(o => o.value === monthFilter)?.label ?? "All Companies") : "All Companies"}
                   </td>
@@ -1084,29 +1084,29 @@ export default function DashboardPage() {
             <table className="border-collapse text-sm w-full" style={{ maxWidth: 140 + supplyMonths.length * 52 + 92 + 170 + 24 }}>
               <thead>
                 <tr>
-                  <td rowSpan={2} className="border border-[#e5e7eb] px-3 py-3 font-bold text-base text-center align-middle" style={{ backgroundColor: "#d71920", color: "#fff", width: 140 }}>
+                  <td rowSpan={2} className="border border-[#e5e7eb] px-3 py-3 font-bold text-base text-center align-middle" style={{ backgroundColor: "#301115", color: "#fff", width: 140 }}>
                     Technical Team Supply
                   </td>
-                  <td colSpan={supplyMonths.length + 2} className="border border-[#e5e7eb] px-3 py-1 text-center font-semibold text-xs" style={{ backgroundColor: "#e11d2e", color: "#fff" }}>
+                  <td colSpan={supplyMonths.length + 2} className="border border-[#e5e7eb] px-3 py-1 text-center font-semibold text-xs" style={{ backgroundColor: "#c94437", color: "#fff" }}>
                     END OF PERIOD GENERATED
                   </td>
                 </tr>
                 <tr>
-                  <td colSpan={supplyMonths.length + 2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-base" style={{ backgroundColor: "#d71920", color: "#fff" }}>
+                  <td colSpan={supplyMonths.length + 2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-base" style={{ backgroundColor: "#301115", color: "#fff" }}>
                     {supplyMonths.length > 1
                       ? `${new Date(supplyMonths[0].year, supplyMonths[0].month - 1, 1).toLocaleString("en-AU", { month: "long" })} – ${new Date(supplyMonths[supplyMonths.length - 1].year, supplyMonths[supplyMonths.length - 1].month - 1, 1).toLocaleString("en-AU", { month: "long" })}`
                       : supplyMonthDate.toLocaleString("en-AU", { month: "long" })}
                   </td>
                 </tr>
                 <tr>
-                  <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f8fafc" }}>APFS / AUDITOR</th>
+                  <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#faf8f6" }}>APFS / AUDITOR</th>
                   {supplyMonths.map(({ year, month }) => (
-                    <th key={`${year}-${month}`} className="border border-[#e5e7eb] px-1.5 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f8fafc", width: 52 }}>
+                    <th key={`${year}-${month}`} className="border border-[#e5e7eb] px-1.5 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#faf8f6", width: 52 }}>
                       {new Date(year, month - 1, 1).toLocaleString("en-AU", { month: "short" })}
                     </th>
                   ))}
-                  <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f8fafc", width: 92 }}>Total Supply Hours</th>
-                  <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f8fafc", width: 170 }}>Roles</th>
+                  <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#faf8f6", width: 92 }}>Total Supply Hours</th>
+                  <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#faf8f6", width: 170 }}>Roles</th>
                 </tr>
               </thead>
               <tbody>
@@ -1199,7 +1199,7 @@ export default function DashboardPage() {
 
                 {/* Total row (includes extra members) */}
                 <tr className="font-bold">
-                  <td className="border border-[#e5e7eb] px-3 py-2" style={{ backgroundColor: "#f8fafc" }} />
+                  <td className="border border-[#e5e7eb] px-3 py-2" style={{ backgroundColor: "#faf8f6" }} />
                   {supplyMonths.map(({ year, month }) => {
                     const isCurrent = year === now.getFullYear() && month === now.getMonth() + 1;
                     const colTotal = [...team.filter(m => !hiddenCoreIds.has(m.id)), ...extraTeam].reduce((s, m) => {
@@ -1208,12 +1208,12 @@ export default function DashboardPage() {
                       return s + Math.max(0, monthSupplyHours(m, year, month) - leaveDays * 8);
                     }, 0);
                     return (
-                      <td key={`${year}-${month}`} className="border border-[#e5e7eb] px-1.5 py-2 text-center" style={{ backgroundColor: "#f8fafc" }}>
+                      <td key={`${year}-${month}`} className="border border-[#e5e7eb] px-1.5 py-2 text-center" style={{ backgroundColor: "#faf8f6" }}>
                         {colTotal}
                       </td>
                     );
                   })}
-                  <td className="border border-[#e5e7eb] px-2 py-2 text-center" style={{ backgroundColor: "#f8fafc" }}>
+                  <td className="border border-[#e5e7eb] px-2 py-2 text-center" style={{ backgroundColor: "#faf8f6" }}>
                     {supplyMonths.reduce((total, { year, month }) => {
                       const isCurrent = year === now.getFullYear() && month === now.getMonth() + 1;
                       return total + [...team.filter(m => !hiddenCoreIds.has(m.id)), ...extraTeam].reduce((s, m) => {
@@ -1223,7 +1223,7 @@ export default function DashboardPage() {
                       }, 0);
                     }, 0)}
                   </td>
-                  <td className="border border-[#e5e7eb] px-2 py-2" style={{ backgroundColor: "#f8fafc" }} />
+                  <td className="border border-[#e5e7eb] px-2 py-2" style={{ backgroundColor: "#faf8f6" }} />
                 </tr>
 
                 {/* Add Member UI */}
@@ -1232,7 +1232,7 @@ export default function DashboardPage() {
                     <td colSpan={isFutureMonthFilter ? 5 : 4} className="border border-[#e5e7eb] px-2 py-1 text-center">
                       <button
                         onClick={() => setAddingMember(true)}
-                        className="text-xs text-[#d71920] hover:text-[#d71920] font-semibold"
+                        className="text-xs text-[#9f202d] hover:text-[#9f202d] font-semibold"
                       >
                         + Add Member
                       </button>
@@ -1250,12 +1250,12 @@ export default function DashboardPage() {
                               value={searchName}
                               onChange={e => setSearchName(e.target.value)}
                               onKeyDown={e => e.key === "Enter" && searchSimPRO()}
-                              className="border border-[#fecaca] rounded px-2 py-1 text-xs flex-1"
+                              className="border border-[#e8d8d5] rounded px-2 py-1 text-xs flex-1"
                             />
                             <button
                               onClick={searchSimPRO}
                               disabled={searching}
-                              className="px-3 py-1 text-xs bg-[#e11d2e] text-white rounded hover:bg-[#d71920] disabled:opacity-50"
+                              className="px-3 py-1 text-xs bg-[#c94437] text-white rounded hover:bg-[#301115] disabled:opacity-50"
                             >
                               {searching ? "Searching…" : "Search"}
                             </button>
@@ -1295,7 +1295,7 @@ export default function DashboardPage() {
                                 placeholder="Role (e.g. Primary APFS)"
                                 value={newRole}
                                 onChange={e => setNewRole(e.target.value)}
-                                className="border border-[#fecaca] rounded px-2 py-1 text-xs flex-1"
+                                className="border border-[#e8d8d5] rounded px-2 py-1 text-xs flex-1"
                               />
                               <button
                                 onClick={saveExtraMember}
@@ -1332,12 +1332,12 @@ export default function DashboardPage() {
                 <button
                   onClick={saveIntercompany}
                   disabled={icSaving}
-                  className="px-3 py-0.5 text-xs rounded bg-[#e11d2e] text-white hover:bg-[#d71920] disabled:opacity-50"
+                  className="px-3 py-0.5 text-xs rounded bg-[#c94437] text-white hover:bg-[#301115] disabled:opacity-50"
                 >
                   {icSaving ? "Saving…" : icSaved ? "Saved ✓" : "Save"}
                 </button>
               </div>
-              <div className="border border-[#e5e7eb] px-3 py-2 mb-2 text-xs text-center italic text-[#52525b]" style={{ backgroundColor: "#f8fafc" }}>
+              <div className="border border-[#e5e7eb] px-3 py-2 mb-2 text-xs text-center italic text-[#52525b]" style={{ backgroundColor: "#faf8f6" }}>
                 this is time assigned to RM or Adair for them to schedule tech team resources at their pleasure ($100 hour)
               </div>
               <table className="border-collapse text-sm w-full">
@@ -1397,7 +1397,7 @@ export default function DashboardPage() {
             <table className="border-collapse w-full text-sm" style={{ minWidth: '600px' }}>
               <thead>
                 <tr>
-                  <td colSpan={9} className="border border-[#e5e7eb] px-3 py-3 text-center font-bold text-base bg-[#d71920] text-white">
+                  <td colSpan={9} className="border border-[#e5e7eb] px-3 py-3 text-center font-bold text-base bg-[#301115] text-white">
                     TECHNICAL SUPPORT WORKS
                   </td>
                 </tr>
@@ -1405,30 +1405,30 @@ export default function DashboardPage() {
                   <td
                     colSpan={9}
                     className="border border-[#e5e7eb] px-2 py-1 text-center text-sm italic text-gray-500"
-                    style={{ backgroundColor: "#f8fafc" }}
+                    style={{ backgroundColor: "#faf8f6" }}
                   >
                     {monthFilter !== "all" ? (monthOptions.find(o => o.value === monthFilter)?.label ?? "All Months") : "All Months"}
                   </td>
                 </tr>
                 <tr>
-                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#d71920", color: "#fff" }}>
+                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#301115", color: "#fff" }}>
                     OTHER BILLABLE WORK SCHEDULED TO TECH TEAMS (100 Per Hour)
                     <div className="font-normal mt-1">(RM JOBS / DRAFTING JOBS / BILLABLE ESTIMATION)</div>
                   </td>
-                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#d71920", color: "#fff" }}>
+                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#301115", color: "#fff" }}>
                     INVESTED TIME (100 Per Hour)
                     <div className="font-normal mt-1">(TRAINING / COURSES, Non Billable Assigned And Nil Charge Estimates to Tech Team)</div>
                   </td>
-                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#d71920", color: "#fff" }}>
+                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#301115", color: "#fff" }}>
                     Quality Assurance — Overall Total of Jobs in SimPRO (100 Per Hour)
                   </td>
                 </tr>
                 <tr>
                   {[0, 1, 2].map(g => (
                     <React.Fragment key={g}>
-                      <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f8fafc" }}># of Jobs</th>
-                      <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f8fafc" }}>Sum of Est. Hrs</th>
-                      <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f8fafc" }}>Amount</th>
+                      <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#faf8f6" }}># of Jobs</th>
+                      <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#faf8f6" }}>Sum of Est. Hrs</th>
+                      <th className="border border-[#e5e7eb] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#faf8f6" }}>Amount</th>
                     </React.Fragment>
                   ))}
                 </tr>
@@ -1448,7 +1448,7 @@ export default function DashboardPage() {
                   <td className="border border-[#e5e7eb] px-2 py-2 text-center text-sm">{qaData ? qaData.hours.toFixed(2) : "—"}</td>
                   <td className="border border-[#e5e7eb] px-2 py-2 text-center text-sm">{qaData ? fmtAmt(qaData.amount) : "—"}</td>
                 </tr>
-                <tr className="font-bold" style={{ backgroundColor: "#f8fafc" }}>
+                <tr className="font-bold" style={{ backgroundColor: "#faf8f6" }}>
                   <td className="border border-[#e5e7eb] px-2 py-2 text-center">{obData ? obData.jobs : "—"}</td>
                   <td className="border border-[#e5e7eb] px-2 py-2 text-center">{obData ? obData.hours.toFixed(2) : "—"}</td>
                   <td className="border border-[#e5e7eb] px-2 py-2 text-center">{obData ? fmtAmt(obData.amount) : "—"}</td>
@@ -1501,7 +1501,7 @@ export default function DashboardPage() {
               const fmtV = (n: number) => n.toFixed(2);
               const excessStyle = { backgroundColor: "#e9d5ff" };
               const supplyStyle = { backgroundColor: "#fef08a" };
-              const overallHeaderStyle = { backgroundColor: "#d71920", color: "#fff" };
+              const overallHeaderStyle = { backgroundColor: "#301115", color: "#fff" };
               const varianceStyle = { backgroundColor: "#fde68a" };
               return (
                 <div className="flex flex-col gap-4">
@@ -1510,7 +1510,7 @@ export default function DashboardPage() {
                   <table className="border-collapse text-sm flex-1">
                     <thead>
                       <tr>
-                        <td colSpan={2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#d71920", color: "#fff" }}>
+                        <td colSpan={2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#301115", color: "#fff" }}>
                           AFSS Audits<br />SUPPLY VS DEMAND
                         </td>
                       </tr>
@@ -1538,7 +1538,7 @@ export default function DashboardPage() {
                   <table className="border-collapse text-sm flex-1">
                     <thead>
                       <tr>
-                        <td colSpan={2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#d71920", color: "#fff" }}>
+                        <td colSpan={2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#301115", color: "#fff" }}>
                           Technical Works + Prospect Demand<br />SUPPLY VS DEMAND
                         </td>
                       </tr>
@@ -1569,14 +1569,14 @@ export default function DashboardPage() {
                 <table className="border-collapse text-sm flex-1">
                   <thead>
                     <tr>
-                      <td colSpan={3} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#d71920", color: "#fff" }}>
+                      <td colSpan={3} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#301115", color: "#fff" }}>
                         AFAC Prospect Demand<br /><span className="font-normal text-xs">NOT YET WON BUT ASSUMED WILL BE NEEDED</span>
                       </td>
                     </tr>
                     <tr>
-                      <th className="border border-[#e5e7eb] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f8fafc" }}># of Jobs</th>
-                      <th className="border border-[#e5e7eb] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f8fafc" }}>Sum of Est. Hrs</th>
-                      <th className="border border-[#e5e7eb] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f8fafc" }}>Amount</th>
+                      <th className="border border-[#e5e7eb] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#faf8f6" }}># of Jobs</th>
+                      <th className="border border-[#e5e7eb] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#faf8f6" }}>Sum of Est. Hrs</th>
+                      <th className="border border-[#e5e7eb] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#faf8f6" }}>Amount</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1607,7 +1607,7 @@ export default function DashboardPage() {
                               type="date"
                               value={afacExcDate}
                               onChange={e => setAfacExcDate(e.target.value)}
-                              className="text-xs border border-[#fecaca] rounded px-1.5 py-0.5"
+                              className="text-xs border border-[#e8d8d5] rounded px-1.5 py-0.5"
                             />
                             <button
                               onClick={() => {
@@ -1617,7 +1617,7 @@ export default function DashboardPage() {
                                 saveAfacExclusions(newList);
                               }}
                               disabled={afacExcSaving}
-                              className="text-xs px-2 py-0.5 bg-[#e11d2e] text-white rounded hover:bg-[#d71920] disabled:opacity-50"
+                              className="text-xs px-2 py-0.5 bg-[#c94437] text-white rounded hover:bg-[#301115] disabled:opacity-50"
                             >{afacExcSaving ? "Saving…" : "Add"}</button>
                             {afacExcSaved && (
                               <span className="text-xs text-green-600 font-semibold">Saved ✓</span>

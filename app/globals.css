@@ -4,15 +4,15 @@
   /* The app is light-only. `color-scheme` keeps browser-rendered controls
      (selects, inputs, scrollbars) light even when the OS prefers dark. */
   color-scheme: light;
-  --background: #f8fafc;
-  --foreground: #111827;
-  --fire-deep: #d71920;
-  --fire-dark: #d71920;
-  --fire: #e11d2e;
-  --fire-hover: #d71920;
-  --fire-soft: #fee2e2;
-  --fire-border: #fecaca;
-  --fire-muted: #52525b;
+  --background: #faf8f6;
+  --foreground: #24181b;
+  --fire-deep: #301115;
+  --fire-dark: #5c1620;
+  --fire: #c94437;
+  --fire-hover: #9f202d;
+  --fire-soft: #fff1eb;
+  --fire-border: #e8d8d5;
+  --fire-muted: #695b5e;
 }
 
 @theme inline {
@@ -38,8 +38,9 @@ body {
   padding: .8rem 1.5rem;
   overflow: hidden;
   color: #fff;
-  background: linear-gradient(110deg, #d71920 0%, #e11d2e 100%);
-  border-bottom: 4px solid #fecaca;
+  background: radial-gradient(circle at 75% 145%, #64141c 0%, transparent 38%),
+    linear-gradient(110deg, #180c0f 0%, #2c0d13 58%, #180b0f 100%);
+  border-bottom: 3px solid #a63a34;
 }
 
 .app-masthead::before {
@@ -47,8 +48,8 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: .22;
-  background: repeating-linear-gradient(115deg, transparent 0 46px, rgba(255,255,255,.2) 47px, transparent 48px 94px);
+  background: radial-gradient(circle at 22% -220%, transparent 0 310px, rgba(255,255,255,.055) 312px 314px, transparent 316px),
+    radial-gradient(circle at 86% 130%, rgba(214,67,46,.17), transparent 33%);
 }
 
 .app-masthead > * { position: relative; }
@@ -70,7 +71,7 @@ body {
 }
 .masthead-eyebrow, .masthead-account-label {
   display: block;
-  color: #fecdd3;
+  color: #f1aa9c;
   font-size: .6rem;
   font-weight: 800;
   letter-spacing: .18em;
@@ -99,8 +100,8 @@ body {
 .masthead-signout:hover { background: rgba(255,255,255,.18); }
 
 .workspace-nav {
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
+  background: #fffaf7;
+  border-bottom: 1px solid #eadfdb;
   box-shadow: 0 4px 18px rgba(15, 23, 42, .06);
 }
 .workspace-heading {
@@ -111,9 +112,10 @@ body {
   gap: 1rem;
   padding: .8rem 1.3rem .8rem 1.5rem;
   color: #fff;
-  background: linear-gradient(105deg, #d71920 0%, #e11d2e 100%);
-  border-bottom: 4px solid #fecaca;
-  border-left: 5px solid #c91f26;
+  background: radial-gradient(circle at 86% 160%, rgba(166,39,34,.4), transparent 34%),
+    linear-gradient(105deg, #211014 0%, #451018 100%);
+  border-bottom: 3px solid #b74438;
+  border-left: 5px solid #d65740;
   overflow: hidden;
 }
 .workspace-heading::after {
@@ -130,7 +132,7 @@ body {
 .workspace-heading > * { position: relative; z-index: 1; }
 .workspace-kicker {
   display: block;
-  color: #fee2e2;
+  color: #f1aa9c;
   font-size: .62rem;
   font-weight: 800;
   letter-spacing: .16em;
@@ -147,33 +149,75 @@ body {
 .workspace-heading .heading-action {
   border: 1px solid #fff;
   background: #fff;
-  color: #d71920;
+  color: #54202a;
   font-weight: 800;
 }
-.workspace-heading .heading-action:hover { background: #fee2e2; }
+.workspace-heading .heading-action:hover { background: #fff1eb; }
 .workspace-table-wrap {
   background: #fff;
   box-shadow: 0 8px 30px rgba(15, 23, 42, .07);
 }
-.workspace-table tbody tr:hover td { background-color: #fef2f2; }
+.queue-surface {
+  min-height: 0;
+  margin: .75rem;
+  border: 1px solid #654147;
+  border-radius: .65rem;
+  box-shadow: 0 18px 34px rgba(0,0,0,.25);
+}
+.analytics-table-frame {
+  background: radial-gradient(circle at 14% 130%, rgba(150,34,30,.48), transparent 38%),
+    linear-gradient(115deg, #1b0d10, #321015 70%, #1a0b0e);
+}
+.workspace-table tbody tr:hover td { background-color: #fff4ef; }
 .workspace-table thead th { letter-spacing: .055em; }
 
-.auth-card { position: relative; overflow: hidden; }
+.auth-screen {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 16% 92%, rgba(170,42,26,.72), transparent 41%),
+    radial-gradient(circle at 72% 20%, rgba(96,15,25,.55), transparent 45%),
+    linear-gradient(130deg, #190c0f 0%, #300d13 58%, #13090c 100%);
+}
+.auth-screen::before {
+  content: "";
+  position: absolute;
+  width: 75vw;
+  height: 75vw;
+  right: -18vw;
+  top: -30vw;
+  border: 1px solid rgba(255,255,255,.045);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.auth-screen::after {
+  content: "";
+  position: absolute;
+  width: 66vw;
+  height: 66vw;
+  left: -22vw;
+  bottom: -36vw;
+  border: 1px solid rgba(255,255,255,.055);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.auth-screen > * { position: relative; z-index: 1; }
+.auth-card { position: relative; overflow: hidden; background: #fffaf7; }
 .auth-card::before {
   content: "";
   position: absolute;
   top: 0;
   right: 0;
-  width: 5.5rem;
-  height: 5.5rem;
-  border-left: 1px solid rgba(225,29,46,.12);
-  background: linear-gradient(135deg, transparent 49%, rgba(225,29,46,.1) 50%);
+  width: 9rem;
+  height: 9rem;
+  border: 1px solid rgba(100,20,28,.075);
+  border-radius: 50%;
+  transform: translate(35%, -35%);
   pointer-events: none;
 }
 .auth-kicker {
   display: block;
   margin-bottom: 1.5rem;
-  color: #d71920;
+  color: #9f202d;
   font-size: .62rem;
   font-weight: 800;
   letter-spacing: .17em;
@@ -195,7 +239,7 @@ body {
 }
 
 ::selection {
-  background: #fecaca;
+  background: #e8d8d5;
   color: var(--fire-deep);
 }
 
