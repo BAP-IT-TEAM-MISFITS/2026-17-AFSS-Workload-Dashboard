@@ -9,27 +9,27 @@ function LoginContent() {
 
   if (error === 'AccessDenied') {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#71302a_0%,#291a18_58%,#201715_100%)]">
-        <div className="bg-[#382522] border border-[#86574c] border-t-4 border-t-[#b6674e] rounded-2xl p-8 w-full max-w-md shadow-2xl text-center">
-          <div className="w-16 h-16 bg-[#542c27] border border-[#a35d4c] rounded-full flex items-center justify-center mx-auto mb-5">
-            <svg className="w-8 h-8 text-[#e5a48c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#991b1b_0%,#450a0a_58%,#2b0b0f_100%)]">
+        <div className="bg-[#4c1117] border border-[#9f3944] border-t-4 border-t-[#dc2626] rounded-2xl p-8 w-full max-w-md shadow-2xl text-center">
+          <div className="w-16 h-16 bg-[#7f1d1d] border border-[#c24148] rounded-full flex items-center justify-center mx-auto mb-5">
+            <svg className="w-8 h-8 text-[#fda4af]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M12 15v2m0 0v2m0-2h2m-2 0H10m2-5V9m0 0V7m0 2h2m-2 0H10M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
             </svg>
           </div>
 
           <h1 className="text-xl font-bold text-white mb-2">Access Denied</h1>
-          <p className="text-[#ddc2b8] text-sm leading-relaxed mb-6">
+          <p className="text-[#fecdd3] text-sm leading-relaxed mb-6">
             Your account is not authorised to access the{' '}
             <span className="text-white font-medium">AFSS Backlog</span> system.
             This system is restricted to members of the{' '}
             <span className="text-white font-medium">Technical AFSS - Deployment</span> group.
           </p>
 
-          <div className="bg-[#4a302b] border border-[#80564d] rounded-xl p-4 mb-6 text-left">
-            <p className="text-[#ddc2b8] text-xs font-medium uppercase tracking-wider mb-3">To request access:</p>
+          <div className="bg-[#661d25] border border-[#a63b48] rounded-xl p-4 mb-6 text-left">
+            <p className="text-[#fecdd3] text-xs font-medium uppercase tracking-wider mb-3">To request access:</p>
             <div className="flex items-start gap-3">
-              <div className="w-7 h-7 bg-[#963f33] rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-7 h-7 bg-[#b91c1c] rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -37,8 +37,8 @@ function LoginContent() {
               </div>
               <div>
                 <p className="text-white text-sm font-medium">Contact your manager</p>
-                <p className="text-[#c8a79c] text-xs mt-0.5">
-                  Ask to be added to the <span className="text-[#ddc2b8]">Technical AFSS - Deployment</span> group in Google Workspace.
+                <p className="text-[#f4b6bf] text-xs mt-0.5">
+                  Ask to be added to the <span className="text-[#fecdd3]">Technical AFSS - Deployment</span> group in Google Workspace.
                 </p>
               </div>
             </div>
@@ -46,7 +46,7 @@ function LoginContent() {
 
           <button
             onClick={() => signIn('google', { callbackUrl: '/' })}
-            className="w-full text-[#ddc2b8] text-xs py-2 hover:text-white transition-colors cursor-pointer"
+            className="w-full text-[#fecdd3] text-xs py-2 hover:text-white transition-colors cursor-pointer"
           >
             Try a different account
           </button>
@@ -56,17 +56,17 @@ function LoginContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#71302a_0%,#291a18_58%,#201715_100%)]">
-      <div className="bg-[#382522] border border-[#86574c] border-t-4 border-t-[#b6674e] rounded-2xl p-8 w-full max-w-sm shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-[radial-gradient(circle_at_50%_0%,#991b1b_0%,#450a0a_58%,#2b0b0f_100%)]">
+      <div className="bg-[#4c1117] border border-[#9f3944] border-t-4 border-t-[#dc2626] rounded-2xl p-8 w-full max-w-sm shadow-2xl">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-[#963f33] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_24px_rgba(182,103,78,0.3)]">
+          <div className="w-12 h-12 bg-[#b91c1c] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_24px_rgba(220,38,38,0.4)]">
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M12 21c4.4 0 8-3.6 8-8 0-3.4-1.8-6.1-5-8-.2 2.4-1.4 4-3 4-1-3-1.4-5.5-.4-8C7.1 4.4 4 8.2 4 13c0 4.4 3.6 8 8 8Z" />
             </svg>
           </div>
           <h1 className="text-xl font-bold text-white">AFSS Backlog</h1>
-          <p className="text-[#d8b4a6] text-sm mt-1">Red Adair Technical</p>
+          <p className="text-[#f4b6bf] text-sm mt-1">Red Adair Technical</p>
         </div>
 
         {error && error !== 'AccessDenied' && (
@@ -83,9 +83,9 @@ function LoginContent() {
           Sign in with Google
         </button>
 
-        <p className="text-center text-[#c5a398] text-xs mt-6 leading-relaxed">
+        <p className="text-center text-[#f0a7b1] text-xs mt-6 leading-relaxed">
           Access is restricted to members of the<br />
-          <span className="text-[#e3c7bc]">Technical AFSS - Deployment</span> group.
+          <span className="text-[#fecdd3]">Technical AFSS - Deployment</span> group.
         </p>
       </div>
     </div>

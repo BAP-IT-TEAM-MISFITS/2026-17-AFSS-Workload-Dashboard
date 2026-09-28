@@ -262,7 +262,7 @@ function currentMonthLabel(now: Date): string {
 }
 
 function StatCells({ s: st, bold, loading, title }: { s: Stats; bold?: boolean; loading?: boolean; title?: string }) {
-  const cls = `border border-[#c6a9a0] px-2 py-3 text-sm ${bold ? "font-bold italic" : ""}`;
+  const cls = `border border-[#e7b5b5] px-2 py-3 text-sm ${bold ? "font-bold italic" : ""}`;
   if (loading) {
     return (
       <>
@@ -917,16 +917,16 @@ export default function Dashboard2Page() {
     supplyMonths.map(({ year, month }) => leaveReasonsForMonth(member, year, month)).filter(Boolean).join(" · ");
 
   const TH = ({ children }: { children: React.ReactNode }) => (
-    <th className="border border-[#c6a9a0] px-2 py-3 text-center text-xs font-semibold bg-[#963f33] text-white">
+    <th className="border border-[#e7b5b5] px-2 py-3 text-center text-xs font-semibold bg-[#b91c1c] text-white">
       {children}
     </th>
   );
 
   return (
-    <div className="flex flex-col bg-[#fffaf7]">
+    <div className="flex flex-col bg-[#fff8f8]">
       {/* Nav */}
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2.5 bg-[#fff6f0] border-b border-[#e6cbc0] shrink-0">
-        <Link href="/" className="text-sm text-[#87372e] hover:underline font-medium shrink-0">← Backlog</Link>
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2.5 bg-[#fff0f1] border-b border-[#efb4b4] shrink-0">
+        <Link href="/" className="text-sm text-[#a31621] hover:underline font-medium shrink-0">← Backlog</Link>
         <select
           defaultValue="/dashboard2"
           onChange={e => { window.location.href = e.target.value; }}
@@ -936,11 +936,11 @@ export default function Dashboard2Page() {
           <option value="/dashboard2">Dashboard (NO DATACOM)</option>
         </select>
         <span className="flex-1 min-w-0 flex flex-wrap items-center gap-x-2 gap-y-1 overflow-hidden">
-          {loading && !hasData && <span className="text-xs text-[#963f33] animate-pulse shrink-0">Loading…</span>}
+          {loading && !hasData && <span className="text-xs text-[#b91c1c] animate-pulse shrink-0">Loading…</span>}
           {updated && !loading && (
             <span className="text-xs text-neutral-400 shrink-0">Updated: {updated.toLocaleTimeString()}</span>
           )}
-          {syncing && !loading && <span className="text-xs text-[#963f33] animate-pulse shrink-0">Syncing…</span>}
+          {syncing && !loading && <span className="text-xs text-[#b91c1c] animate-pulse shrink-0">Syncing…</span>}
           <span className="text-xs text-neutral-400 truncate">
             {hasData && `${visibleAll.length} total jobs${monthFilter !== "all" ? ` in ${monthOptions.find(o => o.value === monthFilter)?.label ?? ""}` : " across all companies"}`}
           </span>
@@ -963,20 +963,20 @@ export default function Dashboard2Page() {
             <tr>
               <td
                 rowSpan={3}
-                className="border border-[#c6a9a0] p-4 text-center align-middle font-bold text-xl"
-                style={{ backgroundColor: "#52221f", color: "#fff", width: "14%" }}
+                className="border border-[#e7b5b5] p-4 text-center align-middle font-bold text-xl"
+                style={{ backgroundColor: "#7f1d1d", color: "#fff", width: "14%" }}
               >
                 TECH TEAM WORKS
               </td>
               <td
                 colSpan={3}
                 rowSpan={2}
-                className="border border-[#c6a9a0] px-3 py-4 text-center text-sm font-medium"
-                style={{ backgroundColor: "#52221f", color: "#fff", width: "21%" }}
+                className="border border-[#e7b5b5] px-3 py-4 text-center text-sm font-medium"
+                style={{ backgroundColor: "#7f1d1d", color: "#fff", width: "21%" }}
               >
                 Work Demand (Total)
               </td>
-              <td colSpan={9} className="border border-[#c6a9a0] px-3 py-3 text-center font-bold text-base bg-[#52221f] text-white">
+              <td colSpan={9} className="border border-[#e7b5b5] px-3 py-3 text-center font-bold text-base bg-[#7f1d1d] text-white">
                 AFSS AUDITS
               </td>
             </tr>
@@ -986,8 +986,8 @@ export default function Dashboard2Page() {
                 <td
                   key={co.id}
                   colSpan={3}
-                  className="border border-[#c6a9a0] px-2 py-3 text-center text-sm font-semibold whitespace-pre-line"
-                  style={{ backgroundColor: "#52221f", color: "#fff", width: "21%" }}
+                  className="border border-[#e7b5b5] px-2 py-3 text-center text-sm font-semibold whitespace-pre-line"
+                  style={{ backgroundColor: "#7f1d1d", color: "#fff", width: "21%" }}
                 >
                   {co.label}
                 </td>
@@ -1010,7 +1010,7 @@ export default function Dashboard2Page() {
               <tr>
                 <td
                   colSpan={13}
-                  className="border border-[#c6a9a0] px-4 py-8 text-center text-sm text-[#963f33] animate-pulse"
+                  className="border border-[#e7b5b5] px-4 py-8 text-center text-sm text-[#b91c1c] animate-pulse"
                 >
                   Loading data from SimPRO…
                 </td>
@@ -1020,8 +1020,8 @@ export default function Dashboard2Page() {
                 {/* Total Backlog */}
                 <tr>
                   <td
-                    className="border border-[#c6a9a0] px-3 py-3 text-sm font-bold italic"
-                    style={{ backgroundColor: "#f7ece6" }}
+                    className="border border-[#e7b5b5] px-3 py-3 text-sm font-bold italic"
+                    style={{ backgroundColor: "#fff0f0" }}
                   >
                     Total Backlog as at end of period
                   </td>
@@ -1036,8 +1036,8 @@ export default function Dashboard2Page() {
                 <tr>
                   <td
                     colSpan={13}
-                    className="border border-[#c6a9a0] px-2 py-1 text-center text-sm italic text-gray-500"
-                    style={{ backgroundColor: "#f7ece6" }}
+                    className="border border-[#e7b5b5] px-2 py-1 text-center text-sm italic text-gray-500"
+                    style={{ backgroundColor: "#fff0f0" }}
                   >
                     {monthFilter !== "all" ? (monthOptions.find(o => o.value === monthFilter)?.label ?? "All Companies") : "All Companies"}
                   </td>
@@ -1054,7 +1054,7 @@ export default function Dashboard2Page() {
                     <React.Fragment key={row.key}>
                       <tr>
                         <td
-                          className="border border-[#c6a9a0] px-2 py-3 text-center text-sm font-semibold"
+                          className="border border-[#e7b5b5] px-2 py-3 text-center text-sm font-semibold"
                           style={{ backgroundColor: row.bg, color: row.color }}
                         >
                           {row.label}
@@ -1088,29 +1088,29 @@ export default function Dashboard2Page() {
             <table className="border-collapse text-sm w-full" style={{ maxWidth: 140 + supplyMonths.length * 52 + 92 + 170 + 24 }}>
               <thead>
                 <tr>
-                  <td rowSpan={2} className="border border-[#c6a9a0] px-3 py-3 font-bold text-base text-center align-middle" style={{ backgroundColor: "#52221f", color: "#fff", width: 140 }}>
+                  <td rowSpan={2} className="border border-[#e7b5b5] px-3 py-3 font-bold text-base text-center align-middle" style={{ backgroundColor: "#7f1d1d", color: "#fff", width: 140 }}>
                     Technical Team Supply
                   </td>
-                  <td colSpan={supplyMonths.length + 2} className="border border-[#c6a9a0] px-3 py-1 text-center font-semibold text-xs" style={{ backgroundColor: "#82483b", color: "#fff" }}>
+                  <td colSpan={supplyMonths.length + 2} className="border border-[#e7b5b5] px-3 py-1 text-center font-semibold text-xs" style={{ backgroundColor: "#a32a2a", color: "#fff" }}>
                     END OF PERIOD GENERATED
                   </td>
                 </tr>
                 <tr>
-                  <td colSpan={supplyMonths.length + 2} className="border border-[#c6a9a0] px-3 py-2 text-center font-bold text-base" style={{ backgroundColor: "#52221f", color: "#fff" }}>
+                  <td colSpan={supplyMonths.length + 2} className="border border-[#e7b5b5] px-3 py-2 text-center font-bold text-base" style={{ backgroundColor: "#7f1d1d", color: "#fff" }}>
                     {supplyMonths.length > 1
                       ? `${new Date(supplyMonths[0].year, supplyMonths[0].month - 1, 1).toLocaleString("en-AU", { month: "long" })} – ${new Date(supplyMonths[supplyMonths.length - 1].year, supplyMonths[supplyMonths.length - 1].month - 1, 1).toLocaleString("en-AU", { month: "long" })}`
                       : supplyMonthDate.toLocaleString("en-AU", { month: "long" })}
                   </td>
                 </tr>
                 <tr>
-                  <th className="border border-[#c6a9a0] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f7ece6" }}>APFS / AUDITOR</th>
+                  <th className="border border-[#e7b5b5] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#fff0f0" }}>APFS / AUDITOR</th>
                   {supplyMonths.map(({ year, month }) => (
-                    <th key={`${year}-${month}`} className="border border-[#c6a9a0] px-1.5 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f7ece6", width: 52 }}>
+                    <th key={`${year}-${month}`} className="border border-[#e7b5b5] px-1.5 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#fff0f0", width: 52 }}>
                       {new Date(year, month - 1, 1).toLocaleString("en-AU", { month: "short" })}
                     </th>
                   ))}
-                  <th className="border border-[#c6a9a0] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f7ece6", width: 92 }}>Total Supply Hours</th>
-                  <th className="border border-[#c6a9a0] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f7ece6", width: 170 }}>Roles</th>
+                  <th className="border border-[#e7b5b5] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#fff0f0", width: 92 }}>Total Supply Hours</th>
+                  <th className="border border-[#e7b5b5] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#fff0f0", width: 170 }}>Roles</th>
                 </tr>
               </thead>
               <tbody>
@@ -1124,7 +1124,7 @@ export default function Dashboard2Page() {
                   });
                   return (
                     <tr key={member.id}>
-                      <td className="border border-[#c6a9a0] px-3 py-2 text-center text-sm">
+                      <td className="border border-[#e7b5b5] px-3 py-2 text-center text-sm">
                         <span className="flex items-center justify-center gap-1">
                           {member.name}
                           {onLeaveNow && <span className="text-xs text-red-500 font-semibold">(On Leave)</span>}
@@ -1138,7 +1138,7 @@ export default function Dashboard2Page() {
                       {monthVals.map((v, i) => {
                         const reason = leaveReasonsForMonth(member, supplyMonths[i].year, supplyMonths[i].month);
                         return (
-                          <td key={i} className="border border-[#c6a9a0] px-1.5 py-2 text-center text-sm" title={reason || undefined}>
+                          <td key={i} className="border border-[#e7b5b5] px-1.5 py-2 text-center text-sm" title={reason || undefined}>
                             {reason ? <span className="cursor-help underline decoration-dotted">{v}</span> : v}
                           </td>
                         );
@@ -1147,12 +1147,12 @@ export default function Dashboard2Page() {
                         const totalReason = leaveReasonsTotal(member);
                         const total = monthVals.reduce((s, v) => s + v, 0);
                         return (
-                          <td className="border border-[#c6a9a0] px-2 py-2 text-center text-sm" title={totalReason || undefined}>
+                          <td className="border border-[#e7b5b5] px-2 py-2 text-center text-sm" title={totalReason || undefined}>
                             {totalReason ? <span className="cursor-help underline decoration-dotted">{total}</span> : total}
                           </td>
                         );
                       })()}
-                      <td className="border border-[#c6a9a0] px-2 py-2 text-center text-xs">{member.role}</td>
+                      <td className="border border-[#e7b5b5] px-2 py-2 text-center text-xs">{member.role}</td>
                     </tr>
                   );
                 })}
@@ -1167,8 +1167,8 @@ export default function Dashboard2Page() {
                     return Math.max(0, monthSupplyHours(member, year, month) - leaveDays * 8);
                   });
                   return (
-                    <tr key={member.id} style={{ backgroundColor: "#f9efe9" }}>
-                      <td className="border border-[#c6a9a0] px-3 py-2 text-center text-sm">
+                    <tr key={member.id} style={{ backgroundColor: "#fff1f2" }}>
+                      <td className="border border-[#e7b5b5] px-3 py-2 text-center text-sm">
                         <span className="flex items-center justify-center gap-1">
                           {member.name}
                           {onLeaveNow && <span className="text-xs text-red-500 font-semibold">(On Leave)</span>}
@@ -1182,7 +1182,7 @@ export default function Dashboard2Page() {
                       {monthVals.map((v, i) => {
                         const reason = leaveReasonsForMonth(member, supplyMonths[i].year, supplyMonths[i].month);
                         return (
-                          <td key={i} className="border border-[#c6a9a0] px-1.5 py-2 text-center text-sm" title={reason || undefined}>
+                          <td key={i} className="border border-[#e7b5b5] px-1.5 py-2 text-center text-sm" title={reason || undefined}>
                             {reason ? <span className="cursor-help underline decoration-dotted">{v}</span> : v}
                           </td>
                         );
@@ -1191,19 +1191,19 @@ export default function Dashboard2Page() {
                         const totalReason = leaveReasonsTotal(member);
                         const total = monthVals.reduce((s, v) => s + v, 0);
                         return (
-                          <td className="border border-[#c6a9a0] px-2 py-2 text-center text-sm" title={totalReason || undefined}>
+                          <td className="border border-[#e7b5b5] px-2 py-2 text-center text-sm" title={totalReason || undefined}>
                             {totalReason ? <span className="cursor-help underline decoration-dotted">{total}</span> : total}
                           </td>
                         );
                       })()}
-                      <td className="border border-[#c6a9a0] px-2 py-2 text-center text-xs">{member.role}</td>
+                      <td className="border border-[#e7b5b5] px-2 py-2 text-center text-xs">{member.role}</td>
                     </tr>
                   );
                 })}
 
                 {/* Total row (includes extra members) */}
                 <tr className="font-bold">
-                  <td className="border border-[#c6a9a0] px-3 py-2" style={{ backgroundColor: "#f7ece6" }} />
+                  <td className="border border-[#e7b5b5] px-3 py-2" style={{ backgroundColor: "#fff0f0" }} />
                   {supplyMonths.map(({ year, month }) => {
                     const isCurrent = year === now.getFullYear() && month === now.getMonth() + 1;
                     const colTotal = [...team.filter(m => !hiddenCoreIds.has(m.id)), ...extraTeam].reduce((s, m) => {
@@ -1212,12 +1212,12 @@ export default function Dashboard2Page() {
                       return s + Math.max(0, monthSupplyHours(m, year, month) - leaveDays * 8);
                     }, 0);
                     return (
-                      <td key={`${year}-${month}`} className="border border-[#c6a9a0] px-1.5 py-2 text-center" style={{ backgroundColor: "#f7ece6" }}>
+                      <td key={`${year}-${month}`} className="border border-[#e7b5b5] px-1.5 py-2 text-center" style={{ backgroundColor: "#fff0f0" }}>
                         {colTotal}
                       </td>
                     );
                   })}
-                  <td className="border border-[#c6a9a0] px-2 py-2 text-center" style={{ backgroundColor: "#f7ece6" }}>
+                  <td className="border border-[#e7b5b5] px-2 py-2 text-center" style={{ backgroundColor: "#fff0f0" }}>
                     {supplyMonths.reduce((total, { year, month }) => {
                       const isCurrent = year === now.getFullYear() && month === now.getMonth() + 1;
                       return total + [...team.filter(m => !hiddenCoreIds.has(m.id)), ...extraTeam].reduce((s, m) => {
@@ -1227,16 +1227,16 @@ export default function Dashboard2Page() {
                       }, 0);
                     }, 0)}
                   </td>
-                  <td className="border border-[#c6a9a0] px-2 py-2" style={{ backgroundColor: "#f7ece6" }} />
+                  <td className="border border-[#e7b5b5] px-2 py-2" style={{ backgroundColor: "#fff0f0" }} />
                 </tr>
 
                 {/* Add Member UI */}
                 {!addingMember ? (
                   <tr>
-                    <td colSpan={isFutureMonthFilter ? 5 : 4} className="border border-[#c6a9a0] px-2 py-1 text-center">
+                    <td colSpan={isFutureMonthFilter ? 5 : 4} className="border border-[#e7b5b5] px-2 py-1 text-center">
                       <button
                         onClick={() => setAddingMember(true)}
-                        className="text-xs text-[#87372e] hover:text-[#52221f] font-semibold"
+                        className="text-xs text-[#a31621] hover:text-[#7f1d1d] font-semibold"
                       >
                         + Add Member
                       </button>
@@ -1245,7 +1245,7 @@ export default function Dashboard2Page() {
                 ) : (
                   <>
                     <tr>
-                      <td colSpan={isFutureMonthFilter ? 5 : 4} className="border border-[#c6a9a0] px-3 py-2" style={{ backgroundColor: "#fff8f3" }}>
+                      <td colSpan={isFutureMonthFilter ? 5 : 4} className="border border-[#e7b5b5] px-3 py-2" style={{ backgroundColor: "#fff5f5" }}>
                         <div className="flex flex-col gap-2">
                           <div className="flex gap-2 items-center">
                             <input
@@ -1254,12 +1254,12 @@ export default function Dashboard2Page() {
                               value={searchName}
                               onChange={e => setSearchName(e.target.value)}
                               onKeyDown={e => e.key === "Enter" && searchSimPRO()}
-                              className="border border-[#e6cbc0] rounded px-2 py-1 text-xs flex-1"
+                              className="border border-[#efb4b4] rounded px-2 py-1 text-xs flex-1"
                             />
                             <button
                               onClick={searchSimPRO}
                               disabled={searching}
-                              className="px-3 py-1 text-xs bg-[#963f33] text-white rounded hover:bg-[#7d3028] disabled:opacity-50"
+                              className="px-3 py-1 text-xs bg-[#b91c1c] text-white rounded hover:bg-[#991b1b] disabled:opacity-50"
                             >
                               {searching ? "Searching…" : "Search"}
                             </button>
@@ -1299,7 +1299,7 @@ export default function Dashboard2Page() {
                                 placeholder="Role (e.g. Primary APFS)"
                                 value={newRole}
                                 onChange={e => setNewRole(e.target.value)}
-                                className="border border-[#e6cbc0] rounded px-2 py-1 text-xs flex-1"
+                                className="border border-[#efb4b4] rounded px-2 py-1 text-xs flex-1"
                               />
                               <button
                                 onClick={saveExtraMember}
@@ -1336,20 +1336,20 @@ export default function Dashboard2Page() {
                 <button
                   onClick={saveIntercompany}
                   disabled={icSaving}
-                  className="px-3 py-0.5 text-xs rounded bg-[#963f33] text-white hover:bg-[#7d3028] disabled:opacity-50"
+                  className="px-3 py-0.5 text-xs rounded bg-[#b91c1c] text-white hover:bg-[#991b1b] disabled:opacity-50"
                 >
                   {icSaving ? "Saving…" : icSaved ? "Saved ✓" : "Save"}
                 </button>
               </div>
-              <div className="border border-[#c6a9a0] px-3 py-2 mb-2 text-xs text-center italic text-[#725650]" style={{ backgroundColor: "#f7ece6" }}>
+              <div className="border border-[#e7b5b5] px-3 py-2 mb-2 text-xs text-center italic text-[#704147]" style={{ backgroundColor: "#fff0f0" }}>
                 this is time assigned to RM or Adair for them to schedule tech team resources at their pleasure ($100 hour)
               </div>
               <table className="border-collapse text-sm w-full">
                 <thead>
                   <tr>
-                    <th className="border border-[#c6a9a0] px-3 py-2 text-xs font-semibold bg-white"></th>
-                    <th className="border border-[#c6a9a0] px-3 py-2 text-center text-xs font-semibold bg-white">Sum of Est. Hrs</th>
-                    <th className="border border-[#c6a9a0] px-3 py-2 text-center text-xs font-semibold bg-white">Amount</th>
+                    <th className="border border-[#e7b5b5] px-3 py-2 text-xs font-semibold bg-white"></th>
+                    <th className="border border-[#e7b5b5] px-3 py-2 text-center text-xs font-semibold bg-white">Sum of Est. Hrs</th>
+                    <th className="border border-[#e7b5b5] px-3 py-2 text-center text-xs font-semibold bg-white">Amount</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1358,9 +1358,9 @@ export default function Dashboard2Page() {
                     const tAmt = t > 0 ? `$ ${(t * 100).toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "—";
                     return (
                       <tr className="font-bold bg-neutral-50">
-                        <td className="border border-[#c6a9a0] px-3 py-1 text-sm">Total</td>
-                        <td className="border border-[#c6a9a0] px-1 py-1 text-center text-sm">{t > 0 ? t : "—"}</td>
-                        <td className="border border-[#c6a9a0] px-3 py-1 text-center text-sm text-neutral-700">{tAmt}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-1 text-sm">Total</td>
+                        <td className="border border-[#e7b5b5] px-1 py-1 text-center text-sm">{t > 0 ? t : "—"}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-1 text-center text-sm text-neutral-700">{tAmt}</td>
                       </tr>
                     );
                   })()}
@@ -1373,13 +1373,13 @@ export default function Dashboard2Page() {
                     const amt = !isNaN(n) && hrs !== "" ? `$ ${(n * 100).toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "—";
                     return (
                       <tr key={label}>
-                        <td className="border border-[#c6a9a0] px-3 py-1 text-sm">{label}</td>
-                        <td className="border border-[#c6a9a0] px-1 py-1 text-center">
+                        <td className="border border-[#e7b5b5] px-3 py-1 text-sm">{label}</td>
+                        <td className="border border-[#e7b5b5] px-1 py-1 text-center">
                           <input type="text" placeholder="—"
                             value={hrs} onChange={e => setHrs(e.target.value)}
                             className="w-full text-center text-sm outline-none bg-transparent" />
                         </td>
-                        <td className="border border-[#c6a9a0] px-3 py-1 text-center text-sm text-neutral-700">
+                        <td className="border border-[#e7b5b5] px-3 py-1 text-center text-sm text-neutral-700">
                           {amt}
                         </td>
                       </tr>
@@ -1401,38 +1401,38 @@ export default function Dashboard2Page() {
             <table className="border-collapse w-full text-sm" style={{ minWidth: '600px' }}>
               <thead>
                 <tr>
-                  <td colSpan={9} className="border border-[#c6a9a0] px-3 py-3 text-center font-bold text-base bg-[#52221f] text-white">
+                  <td colSpan={9} className="border border-[#e7b5b5] px-3 py-3 text-center font-bold text-base bg-[#7f1d1d] text-white">
                     TECHNICAL SUPPORT WORKS
                   </td>
                 </tr>
                 <tr>
                   <td
                     colSpan={9}
-                    className="border border-[#c6a9a0] px-2 py-1 text-center text-sm italic text-gray-500"
-                    style={{ backgroundColor: "#f7ece6" }}
+                    className="border border-[#e7b5b5] px-2 py-1 text-center text-sm italic text-gray-500"
+                    style={{ backgroundColor: "#fff0f0" }}
                   >
                     {monthFilter !== "all" ? (monthOptions.find(o => o.value === monthFilter)?.label ?? "All Months") : "All Months"}
                   </td>
                 </tr>
                 <tr>
-                  <td colSpan={3} className="border border-[#c6a9a0] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#52221f", color: "#fff" }}>
+                  <td colSpan={3} className="border border-[#e7b5b5] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#7f1d1d", color: "#fff" }}>
                     OTHER BILLABLE WORK SCHEDULED TO TECH TEAMS (100 Per Hour)
                     <div className="font-normal mt-1">(RM JOBS / DRAFTING JOBS / BILLABLE ESTIMATION)</div>
                   </td>
-                  <td colSpan={3} className="border border-[#c6a9a0] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#52221f", color: "#fff" }}>
+                  <td colSpan={3} className="border border-[#e7b5b5] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#7f1d1d", color: "#fff" }}>
                     INVESTED TIME (100 Per Hour)
                     <div className="font-normal mt-1">(TRAINING / COURSES, Non Billable Assigned And Nil Charge Estimates to Tech Team)</div>
                   </td>
-                  <td colSpan={3} className="border border-[#c6a9a0] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#52221f", color: "#fff" }}>
+                  <td colSpan={3} className="border border-[#e7b5b5] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#7f1d1d", color: "#fff" }}>
                     Quality Assurance — Overall Total of Jobs in SimPRO (100 Per Hour)
                   </td>
                 </tr>
                 <tr>
                   {[0, 1, 2].map(g => (
                     <React.Fragment key={g}>
-                      <th className="border border-[#c6a9a0] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f7ece6" }}># of Jobs</th>
-                      <th className="border border-[#c6a9a0] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f7ece6" }}>Sum of Est. Hrs</th>
-                      <th className="border border-[#c6a9a0] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f7ece6" }}>Amount</th>
+                      <th className="border border-[#e7b5b5] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#fff0f0" }}># of Jobs</th>
+                      <th className="border border-[#e7b5b5] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#fff0f0" }}>Sum of Est. Hrs</th>
+                      <th className="border border-[#e7b5b5] px-2 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#fff0f0" }}>Amount</th>
                     </React.Fragment>
                   ))}
                 </tr>
@@ -1440,17 +1440,17 @@ export default function Dashboard2Page() {
               <tbody>
                 <tr>
                   {/* Other Billable — auto-fetched */}
-                  <td className="border border-[#c6a9a0] px-2 py-2 text-center text-sm">{obData ? obData.jobs : "—"}</td>
-                  <td className="border border-[#c6a9a0] px-2 py-2 text-center text-sm">{obData ? obData.hours.toFixed(2) : "—"}</td>
-                  <td className="border border-[#c6a9a0] px-2 py-2 text-center text-sm">{obData ? fmtAmt(obData.amount) : "—"}</td>
+                  <td className="border border-[#e7b5b5] px-2 py-2 text-center text-sm">{obData ? obData.jobs : "—"}</td>
+                  <td className="border border-[#e7b5b5] px-2 py-2 text-center text-sm">{obData ? obData.hours.toFixed(2) : "—"}</td>
+                  <td className="border border-[#e7b5b5] px-2 py-2 text-center text-sm">{obData ? fmtAmt(obData.amount) : "—"}</td>
                   {/* Invested Time — auto-fetched */}
-                  <td className="border border-[#c6a9a0] px-2 py-2 text-center text-sm">{itData ? itData.jobs : "—"}</td>
-                  <td className="border border-[#c6a9a0] px-2 py-2 text-center text-sm">{itData ? itData.hours.toFixed(2) : "—"}</td>
-                  <td className="border border-[#c6a9a0] px-2 py-2 text-center text-sm">{itData ? fmtAmt(itData.amount) : "—"}</td>
+                  <td className="border border-[#e7b5b5] px-2 py-2 text-center text-sm">{itData ? itData.jobs : "—"}</td>
+                  <td className="border border-[#e7b5b5] px-2 py-2 text-center text-sm">{itData ? itData.hours.toFixed(2) : "—"}</td>
+                  <td className="border border-[#e7b5b5] px-2 py-2 text-center text-sm">{itData ? fmtAmt(itData.amount) : "—"}</td>
                   {/* Quality Assurance — auto-fetched */}
-                  <td className="border border-[#c6a9a0] px-2 py-2 text-center text-sm">{qaData ? qaData.jobs : "—"}</td>
-                  <td className="border border-[#c6a9a0] px-2 py-2 text-center text-sm">{qaData ? qaData.hours.toFixed(2) : "—"}</td>
-                  <td className="border border-[#c6a9a0] px-2 py-2 text-center text-sm">{qaData ? fmtAmt(qaData.amount) : "—"}</td>
+                  <td className="border border-[#e7b5b5] px-2 py-2 text-center text-sm">{qaData ? qaData.jobs : "—"}</td>
+                  <td className="border border-[#e7b5b5] px-2 py-2 text-center text-sm">{qaData ? qaData.hours.toFixed(2) : "—"}</td>
+                  <td className="border border-[#e7b5b5] px-2 py-2 text-center text-sm">{qaData ? fmtAmt(qaData.amount) : "—"}</td>
                 </tr>
               </tbody>
             </table>
@@ -1494,7 +1494,7 @@ export default function Dashboard2Page() {
               const fmtV = (n: number) => n.toFixed(2);
               const excessStyle = { backgroundColor: "#e9d5ff" };
               const supplyStyle = { backgroundColor: "#fef08a" };
-              const overallHeaderStyle = { backgroundColor: "#52221f", color: "#fff" };
+              const overallHeaderStyle = { backgroundColor: "#7f1d1d", color: "#fff" };
               const varianceStyle = { backgroundColor: "#fde68a" };
               return (
                 <div className="flex flex-col gap-4">
@@ -1503,27 +1503,27 @@ export default function Dashboard2Page() {
                   <table className="border-collapse text-sm flex-1">
                     <thead>
                       <tr>
-                        <td colSpan={2} className="border border-[#c6a9a0] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#52221f", color: "#fff" }}>
+                        <td colSpan={2} className="border border-[#e7b5b5] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#7f1d1d", color: "#fff" }}>
                           AFSS Audits<br />SUPPLY VS DEMAND
                         </td>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm">Supply Hours Audits</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-center font-bold text-sm">{supplyAudit.toFixed(2)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm">Supply Hours Audits</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-center font-bold text-sm">{supplyAudit.toFixed(2)}</td>
                       </tr>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm">Demand Hours Audits</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-center text-sm font-bold">{demandAudit.toFixed(2)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm">Demand Hours Audits</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-center text-sm font-bold">{demandAudit.toFixed(2)}</td>
                       </tr>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm font-semibold">Excess Demand Hours Audits</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-center font-bold text-sm">{Math.abs(excessAudit).toFixed(2)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm font-semibold">Excess Demand Hours Audits</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-center font-bold text-sm">{Math.abs(excessAudit).toFixed(2)}</td>
                       </tr>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm font-semibold">Excess Demand Days Audits</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-center font-bold text-sm">{Math.abs(excessDaysAudit).toFixed(2)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm font-semibold">Excess Demand Days Audits</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-center font-bold text-sm">{Math.abs(excessDaysAudit).toFixed(2)}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -1531,27 +1531,27 @@ export default function Dashboard2Page() {
                   <table className="border-collapse text-sm flex-1">
                     <thead>
                       <tr>
-                        <td colSpan={2} className="border border-[#c6a9a0] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#52221f", color: "#fff" }}>
+                        <td colSpan={2} className="border border-[#e7b5b5] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#7f1d1d", color: "#fff" }}>
                           Technical Works + Prospect Demand<br />SUPPLY VS DEMAND
                         </td>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm">Supply Hours Technical</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-center font-bold text-sm">{supplyTech.toFixed(2)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm">Supply Hours Technical</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-center font-bold text-sm">{supplyTech.toFixed(2)}</td>
                       </tr>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm">Demand Hours Technical</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-center text-sm font-bold">{demandTech.toFixed(2)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm">Demand Hours Technical</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-center text-sm font-bold">{demandTech.toFixed(2)}</td>
                       </tr>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm font-semibold">Excess Demand Hours</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-center font-bold text-sm">{fmtN(excessTech)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm font-semibold">Excess Demand Hours</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-center font-bold text-sm">{fmtN(excessTech)}</td>
                       </tr>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm font-semibold">Excess Demand Days</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-center font-bold text-sm">{fmtN(excessDaysTech)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm font-semibold">Excess Demand Days</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-center font-bold text-sm">{fmtN(excessDaysTech)}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -1562,37 +1562,37 @@ export default function Dashboard2Page() {
                 <table className="border-collapse text-sm flex-1">
                   <thead>
                     <tr>
-                      <td colSpan={3} className="border border-[#c6a9a0] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#52221f", color: "#fff" }}>
+                      <td colSpan={3} className="border border-[#e7b5b5] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#7f1d1d", color: "#fff" }}>
                         AFAC Prospect Demand<br /><span className="font-normal text-xs">NOT YET WON BUT ASSUMED WILL BE NEEDED</span>
                       </td>
                     </tr>
                     <tr>
-                      <th className="border border-[#c6a9a0] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f7ece6" }}># of Jobs</th>
-                      <th className="border border-[#c6a9a0] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f7ece6" }}>Sum of Est. Hrs</th>
-                      <th className="border border-[#c6a9a0] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#f7ece6" }}>Amount</th>
+                      <th className="border border-[#e7b5b5] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#fff0f0" }}># of Jobs</th>
+                      <th className="border border-[#e7b5b5] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#fff0f0" }}>Sum of Est. Hrs</th>
+                      <th className="border border-[#e7b5b5] px-3 py-2 text-center text-xs font-semibold" style={{ backgroundColor: "#fff0f0" }}>Amount</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="border border-[#c6a9a0] px-3 py-2 text-center text-sm font-bold">
+                      <td className="border border-[#e7b5b5] px-3 py-2 text-center text-sm font-bold">
                         {afacProspect ? afacProspect.jobs : "—"}
                       </td>
-                      <td className="border border-[#c6a9a0] px-3 py-2 text-center text-sm font-bold">
+                      <td className="border border-[#e7b5b5] px-3 py-2 text-center text-sm font-bold">
                         {afacProspect ? afacProspect.hours.toFixed(2) : "—"}
                       </td>
-                      <td className="border border-[#c6a9a0] px-3 py-2 text-center text-sm font-bold">
+                      <td className="border border-[#e7b5b5] px-3 py-2 text-center text-sm font-bold">
                         {afacProspect ? `$ ${(afacProspect.hours * 100).toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "—"}
                       </td>
                     </tr>
                     <tr>
-                      <td colSpan={3} className="border border-[#c6a9a0] px-3 py-2 text-xs text-gray-500 italic text-center">
+                      <td colSpan={3} className="border border-[#e7b5b5] px-3 py-2 text-xs text-gray-500 italic text-center">
                         {afacProspect
                           ? `AFAC Chubb Previous Years Scheduled (${new Date(afacProspect.dateFrom + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })} – ${new Date(afacProspect.dateTo + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })})`
                           : "AFAC Chubb Previous Years Scheduled (Last Year Reporting Period)"}
                       </td>
                     </tr>
                     <tr>
-                      <td colSpan={3} className="border border-[#c6a9a0] px-3 py-2">
+                      <td colSpan={3} className="border border-[#e7b5b5] px-3 py-2">
                         <div className="flex flex-col gap-1.5">
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-semibold text-neutral-600">Exclude dates:</span>
@@ -1600,7 +1600,7 @@ export default function Dashboard2Page() {
                               type="date"
                               value={afacExcDate}
                               onChange={e => setAfacExcDate(e.target.value)}
-                              className="text-xs border border-[#e6cbc0] rounded px-1.5 py-0.5"
+                              className="text-xs border border-[#efb4b4] rounded px-1.5 py-0.5"
                             />
                             <button
                               onClick={() => {
@@ -1610,7 +1610,7 @@ export default function Dashboard2Page() {
                                 saveAfacExclusions(newList);
                               }}
                               disabled={afacExcSaving}
-                              className="text-xs px-2 py-0.5 bg-[#963f33] text-white rounded hover:bg-[#7d3028] disabled:opacity-50"
+                              className="text-xs px-2 py-0.5 bg-[#b91c1c] text-white rounded hover:bg-[#991b1b] disabled:opacity-50"
                             >{afacExcSaving ? "Saving…" : "Add"}</button>
                             {afacExcSaved && (
                               <span className="text-xs text-green-600 font-semibold">Saved ✓</span>
@@ -1635,31 +1635,31 @@ export default function Dashboard2Page() {
                 <table className="border-collapse text-sm flex-1" style={{ minWidth: 320 }}>
                     <thead>
                       <tr>
-                        <td colSpan={2} className="border border-[#c6a9a0] px-3 py-2 text-center font-bold text-sm" style={overallHeaderStyle}>
+                        <td colSpan={2} className="border border-[#e7b5b5] px-3 py-2 text-center font-bold text-sm" style={overallHeaderStyle}>
                           Overall Demand VS Supply
                         </td>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm font-bold text-center">{supplyOverall.toFixed(2)}</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm">Supply Overall</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm font-bold text-center">{supplyOverall.toFixed(2)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm">Supply Overall</td>
                       </tr>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm text-center font-bold">{demandOverall.toFixed(2)}</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm">Demand Overall</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm text-center font-bold">{demandOverall.toFixed(2)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm">Demand Overall</td>
                       </tr>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm font-bold text-center">{fmtV(varianceHours)}</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm font-semibold">Variance in Man Hours</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm font-bold text-center">{fmtV(varianceHours)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm font-semibold">Variance in Man Hours</td>
                       </tr>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm font-bold text-center">{fmtV(varianceDays)}</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm font-semibold">Variance in Days</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm font-bold text-center">{fmtV(varianceDays)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm font-semibold">Variance in Days</td>
                       </tr>
                       <tr>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm font-bold text-center">{fmtV(varianceWeeks)}</td>
-                        <td className="border border-[#c6a9a0] px-3 py-2 text-sm font-semibold">Variance in Man Weeks</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm font-bold text-center">{fmtV(varianceWeeks)}</td>
+                        <td className="border border-[#e7b5b5] px-3 py-2 text-sm font-semibold">Variance in Man Weeks</td>
                       </tr>
                     </tbody>
                   </table>
