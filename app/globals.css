@@ -40,7 +40,7 @@ body {
   color: #fff;
   background: radial-gradient(circle at 75% 145%, #64141c 0%, transparent 38%),
     linear-gradient(110deg, #180c0f 0%, #2c0d13 58%, #180b0f 100%);
-  border-bottom: 3px solid #a63a34;
+  box-shadow: inset 0 -1px rgba(255,255,255,.1);
 }
 
 .app-masthead::before {
@@ -81,7 +81,7 @@ body {
   justify-content: center;
   gap: 1rem;
   padding: .4rem .8rem;
-  border-radius: .35rem;
+  border-radius: .85rem;
   background: rgba(255,255,255,.95);
   box-shadow: 0 6px 20px rgba(15, 23, 42, .18);
 }
@@ -101,8 +101,12 @@ body {
 
 .workspace-nav {
   background: #fffaf7;
-  border-bottom: 1px solid #eadfdb;
-  box-shadow: 0 4px 18px rgba(15, 23, 42, .06);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, .06), inset 0 -1px #eadfdb;
+}
+.backlog-nav {
+  margin: .75rem .75rem 0;
+  border-radius: 1rem;
+  box-shadow: 0 12px 24px rgba(0,0,0,.18);
 }
 .workspace-heading {
   position: relative;
@@ -114,8 +118,8 @@ body {
   color: #fff;
   background: radial-gradient(circle at 86% 160%, rgba(166,39,34,.4), transparent 34%),
     linear-gradient(105deg, #211014 0%, #451018 100%);
-  border-bottom: 3px solid #b74438;
-  border-left: 5px solid #d65740;
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0 10px 24px rgba(25, 8, 12, .18);
   overflow: hidden;
 }
 .workspace-heading::after {

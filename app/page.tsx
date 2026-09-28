@@ -452,13 +452,13 @@ export default function BacklogPage() {
     <div className="flex flex-col h-screen bg-[#1a0b0e]" onClick={() => setDropdownOpen(false)}>
 
       {/* Top bar: company dropdown + stage tabs */}
-      <div className="workspace-nav flex flex-wrap items-stretch shrink-0">
+      <div className="workspace-nav backlog-nav flex flex-wrap items-center gap-2 px-3 py-2 shrink-0">
 
         {/* Company dropdown */}
-        <div className="relative w-full sm:w-auto border-b sm:border-b-0" onClick={(e) => e.stopPropagation()}>
+        <div className="relative w-full sm:w-auto" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => setDropdownOpen((o) => !o)}
-            className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-[#9f202d] hover:bg-[#fff1eb] sm:border-r sm:border-[#e8d8d5] w-full sm:min-w-[180px]"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-[#9f202d] rounded-full hover:bg-[#fff1eb] w-full sm:min-w-[180px]"
           >
             <span className="w-3 h-3 rounded-sm bg-[#c94437] shrink-0" />
             {companyLabel}
@@ -468,7 +468,7 @@ export default function BacklogPage() {
           </button>
 
           {dropdownOpen && (
-            <div className="absolute top-full left-0 z-50 bg-[#ffffff] border border-[#e8d8d5] rounded-b shadow-lg w-full sm:min-w-[220px]">
+            <div className="absolute top-full mt-2 left-0 z-50 bg-[#ffffff] border border-[#e8d8d5] rounded-xl shadow-lg w-full sm:min-w-[220px] overflow-hidden">
               {COMPANIES.map((co) => (
                 <button
                   key={co.id}
@@ -515,7 +515,7 @@ export default function BacklogPage() {
         <select
           defaultValue=""
           onChange={e => { if (e.target.value) window.location.href = e.target.value; }}
-          className="px-5 py-3 text-sm font-medium text-[#52525b] hover:text-[#9f202d] border-b sm:border-b-0 sm:border-r border-[#e8d8d5] hover:bg-[#fff1eb] bg-white cursor-pointer w-full sm:w-auto"
+          className="px-4 py-2 text-sm font-medium text-[#52525b] hover:text-[#9f202d] rounded-full hover:bg-[#fff1eb] bg-transparent cursor-pointer w-full sm:w-auto"
         >
           <option value="" disabled hidden>Dashboard</option>
           <option value="/dashboard">Dashboard</option>
@@ -524,15 +524,15 @@ export default function BacklogPage() {
 
         {/* Stage tabs (not applicable to raw data views) */}
         {!raw && (
-          <div className="flex items-center px-2 w-full sm:w-auto">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             {STAGES.map((st) => (
               <button
                 key={st}
                 onClick={() => setStage(st)}
-                className={`flex-1 sm:flex-none px-5 py-3 text-sm font-medium border-b-2 transition-colors ${
+                className={`flex-1 sm:flex-none px-5 py-2 text-sm font-medium rounded-full transition-colors ${
                   st === stage
-                    ? "border-[#9f202d] text-white bg-[#c94437]"
-                    : "border-transparent text-[#52525b] hover:text-[#9f202d] hover:bg-[#fff1eb]"
+                    ? "text-white bg-[#c94437] shadow-[0_3px_8px_rgba(77,16,24,0.18)]"
+                    : "text-[#52525b] hover:text-[#9f202d] hover:bg-[#fff1eb]"
                 }`}
               >
                 {st}
