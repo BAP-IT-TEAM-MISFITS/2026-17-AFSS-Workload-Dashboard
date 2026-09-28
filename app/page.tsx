@@ -449,7 +449,7 @@ export default function BacklogPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[#1a0b0e]" onClick={() => setDropdownOpen(false)}>
+    <div className="flex flex-1 min-h-0 flex-col bg-[#1a0b0e]" onClick={() => setDropdownOpen(false)}>
 
       {/* Top bar: company dropdown + stage tabs */}
       <div className="workspace-nav backlog-nav flex flex-wrap items-center gap-2 px-3 py-2 shrink-0">
