@@ -905,7 +905,7 @@ export default function DashboardPage() {
     supplyMonths.map(({ year, month }) => leaveReasonsForMonth(member, year, month)).filter(Boolean).join(" · ");
 
   const TH = ({ children }: { children: React.ReactNode }) => (
-    <th className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-semibold bg-[#dc2626] text-white">
+    <th className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-semibold bg-[#e11d2e] text-white">
       {children}
     </th>
   );
@@ -914,7 +914,7 @@ export default function DashboardPage() {
     <div className="flex flex-col bg-[#f8fafc]">
       {/* Nav */}
       <div className="workspace-nav flex flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2.5 shrink-0">
-        <Link href="/" className="text-sm text-[#b91c1c] hover:underline font-medium shrink-0">← Backlog</Link>
+        <Link href="/" className="text-sm text-[#d71920] hover:underline font-medium shrink-0">← Backlog</Link>
         <select
           defaultValue="/dashboard"
           onChange={e => { window.location.href = e.target.value; }}
@@ -924,11 +924,11 @@ export default function DashboardPage() {
           <option value="/dashboard2">Dashboard (NO DATACOM)</option>
         </select>
         <span className="flex-1 min-w-0 flex flex-wrap items-center gap-x-2 gap-y-1 overflow-hidden">
-          {loading && !hasData && <span className="text-xs text-[#dc2626] animate-pulse shrink-0">Loading…</span>}
+          {loading && !hasData && <span className="text-xs text-[#e11d2e] animate-pulse shrink-0">Loading…</span>}
           {updated && !loading && (
             <span className="text-xs text-neutral-400 shrink-0">Updated: {updated.toLocaleTimeString()}</span>
           )}
-          {syncing && !loading && <span className="text-xs text-[#dc2626] animate-pulse shrink-0">Syncing…</span>}
+          {syncing && !loading && <span className="text-xs text-[#e11d2e] animate-pulse shrink-0">Syncing…</span>}
           <span className="text-xs text-neutral-400 truncate">
             {hasData && `${visibleAll.length} total jobs${monthFilter !== "all" ? ` in ${monthOptions.find(o => o.value === monthFilter)?.label ?? ""}` : " across all companies"}`}
           </span>
@@ -960,7 +960,7 @@ export default function DashboardPage() {
               <td
                 rowSpan={3}
                 className="border border-[#e5e7eb] p-4 text-center align-middle font-bold text-xl"
-                style={{ backgroundColor: "#b91c1c", color: "#fff", width: "14%" }}
+                style={{ backgroundColor: "#d71920", color: "#fff", width: "14%" }}
               >
                 TECH TEAM WORKS
               </td>
@@ -968,11 +968,11 @@ export default function DashboardPage() {
                 colSpan={3}
                 rowSpan={2}
                 className="border border-[#e5e7eb] px-3 py-4 text-center text-sm font-medium"
-                style={{ backgroundColor: "#b91c1c", color: "#fff", width: "21%" }}
+                style={{ backgroundColor: "#d71920", color: "#fff", width: "21%" }}
               >
                 Work Demand (Total)
               </td>
-              <td colSpan={9} className="border border-[#e5e7eb] px-3 py-3 text-center font-bold text-base bg-[#b91c1c] text-white">
+              <td colSpan={9} className="border border-[#e5e7eb] px-3 py-3 text-center font-bold text-base bg-[#d71920] text-white">
                 AFSS AUDITS
               </td>
             </tr>
@@ -983,7 +983,7 @@ export default function DashboardPage() {
                   key={co.id}
                   colSpan={3}
                   className="border border-[#e5e7eb] px-2 py-3 text-center text-sm font-semibold whitespace-pre-line"
-                  style={{ backgroundColor: "#b91c1c", color: "#fff", width: "21%" }}
+                  style={{ backgroundColor: "#d71920", color: "#fff", width: "21%" }}
                 >
                   {co.label}
                 </td>
@@ -1006,7 +1006,7 @@ export default function DashboardPage() {
               <tr>
                 <td
                   colSpan={13}
-                  className="border border-[#e5e7eb] px-4 py-8 text-center text-sm text-[#dc2626] animate-pulse"
+                  className="border border-[#e5e7eb] px-4 py-8 text-center text-sm text-[#e11d2e] animate-pulse"
                 >
                   Loading data from SimPRO…
                 </td>
@@ -1084,15 +1084,15 @@ export default function DashboardPage() {
             <table className="border-collapse text-sm w-full" style={{ maxWidth: 140 + supplyMonths.length * 52 + 92 + 170 + 24 }}>
               <thead>
                 <tr>
-                  <td rowSpan={2} className="border border-[#e5e7eb] px-3 py-3 font-bold text-base text-center align-middle" style={{ backgroundColor: "#b91c1c", color: "#fff", width: 140 }}>
+                  <td rowSpan={2} className="border border-[#e5e7eb] px-3 py-3 font-bold text-base text-center align-middle" style={{ backgroundColor: "#d71920", color: "#fff", width: 140 }}>
                     Technical Team Supply
                   </td>
-                  <td colSpan={supplyMonths.length + 2} className="border border-[#e5e7eb] px-3 py-1 text-center font-semibold text-xs" style={{ backgroundColor: "#dc2626", color: "#fff" }}>
+                  <td colSpan={supplyMonths.length + 2} className="border border-[#e5e7eb] px-3 py-1 text-center font-semibold text-xs" style={{ backgroundColor: "#e11d2e", color: "#fff" }}>
                     END OF PERIOD GENERATED
                   </td>
                 </tr>
                 <tr>
-                  <td colSpan={supplyMonths.length + 2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-base" style={{ backgroundColor: "#b91c1c", color: "#fff" }}>
+                  <td colSpan={supplyMonths.length + 2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-base" style={{ backgroundColor: "#d71920", color: "#fff" }}>
                     {supplyMonths.length > 1
                       ? `${new Date(supplyMonths[0].year, supplyMonths[0].month - 1, 1).toLocaleString("en-AU", { month: "long" })} – ${new Date(supplyMonths[supplyMonths.length - 1].year, supplyMonths[supplyMonths.length - 1].month - 1, 1).toLocaleString("en-AU", { month: "long" })}`
                       : supplyMonthDate.toLocaleString("en-AU", { month: "long" })}
@@ -1232,7 +1232,7 @@ export default function DashboardPage() {
                     <td colSpan={isFutureMonthFilter ? 5 : 4} className="border border-[#e5e7eb] px-2 py-1 text-center">
                       <button
                         onClick={() => setAddingMember(true)}
-                        className="text-xs text-[#b91c1c] hover:text-[#b91c1c] font-semibold"
+                        className="text-xs text-[#d71920] hover:text-[#d71920] font-semibold"
                       >
                         + Add Member
                       </button>
@@ -1255,7 +1255,7 @@ export default function DashboardPage() {
                             <button
                               onClick={searchSimPRO}
                               disabled={searching}
-                              className="px-3 py-1 text-xs bg-[#dc2626] text-white rounded hover:bg-[#b91c1c] disabled:opacity-50"
+                              className="px-3 py-1 text-xs bg-[#e11d2e] text-white rounded hover:bg-[#d71920] disabled:opacity-50"
                             >
                               {searching ? "Searching…" : "Search"}
                             </button>
@@ -1332,7 +1332,7 @@ export default function DashboardPage() {
                 <button
                   onClick={saveIntercompany}
                   disabled={icSaving}
-                  className="px-3 py-0.5 text-xs rounded bg-[#dc2626] text-white hover:bg-[#b91c1c] disabled:opacity-50"
+                  className="px-3 py-0.5 text-xs rounded bg-[#e11d2e] text-white hover:bg-[#d71920] disabled:opacity-50"
                 >
                   {icSaving ? "Saving…" : icSaved ? "Saved ✓" : "Save"}
                 </button>
@@ -1397,7 +1397,7 @@ export default function DashboardPage() {
             <table className="border-collapse w-full text-sm" style={{ minWidth: '600px' }}>
               <thead>
                 <tr>
-                  <td colSpan={9} className="border border-[#e5e7eb] px-3 py-3 text-center font-bold text-base bg-[#b91c1c] text-white">
+                  <td colSpan={9} className="border border-[#e5e7eb] px-3 py-3 text-center font-bold text-base bg-[#d71920] text-white">
                     TECHNICAL SUPPORT WORKS
                   </td>
                 </tr>
@@ -1411,15 +1411,15 @@ export default function DashboardPage() {
                   </td>
                 </tr>
                 <tr>
-                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#b91c1c", color: "#fff" }}>
+                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#d71920", color: "#fff" }}>
                     OTHER BILLABLE WORK SCHEDULED TO TECH TEAMS (100 Per Hour)
                     <div className="font-normal mt-1">(RM JOBS / DRAFTING JOBS / BILLABLE ESTIMATION)</div>
                   </td>
-                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#b91c1c", color: "#fff" }}>
+                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#d71920", color: "#fff" }}>
                     INVESTED TIME (100 Per Hour)
                     <div className="font-normal mt-1">(TRAINING / COURSES, Non Billable Assigned And Nil Charge Estimates to Tech Team)</div>
                   </td>
-                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#b91c1c", color: "#fff" }}>
+                  <td colSpan={3} className="border border-[#e5e7eb] px-2 py-3 text-center text-xs font-bold align-top" style={{ backgroundColor: "#d71920", color: "#fff" }}>
                     Quality Assurance — Overall Total of Jobs in SimPRO (100 Per Hour)
                   </td>
                 </tr>
@@ -1501,7 +1501,7 @@ export default function DashboardPage() {
               const fmtV = (n: number) => n.toFixed(2);
               const excessStyle = { backgroundColor: "#e9d5ff" };
               const supplyStyle = { backgroundColor: "#fef08a" };
-              const overallHeaderStyle = { backgroundColor: "#b91c1c", color: "#fff" };
+              const overallHeaderStyle = { backgroundColor: "#d71920", color: "#fff" };
               const varianceStyle = { backgroundColor: "#fde68a" };
               return (
                 <div className="flex flex-col gap-4">
@@ -1510,7 +1510,7 @@ export default function DashboardPage() {
                   <table className="border-collapse text-sm flex-1">
                     <thead>
                       <tr>
-                        <td colSpan={2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#b91c1c", color: "#fff" }}>
+                        <td colSpan={2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#d71920", color: "#fff" }}>
                           AFSS Audits<br />SUPPLY VS DEMAND
                         </td>
                       </tr>
@@ -1538,7 +1538,7 @@ export default function DashboardPage() {
                   <table className="border-collapse text-sm flex-1">
                     <thead>
                       <tr>
-                        <td colSpan={2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#b91c1c", color: "#fff" }}>
+                        <td colSpan={2} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#d71920", color: "#fff" }}>
                           Technical Works + Prospect Demand<br />SUPPLY VS DEMAND
                         </td>
                       </tr>
@@ -1569,7 +1569,7 @@ export default function DashboardPage() {
                 <table className="border-collapse text-sm flex-1">
                   <thead>
                     <tr>
-                      <td colSpan={3} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#b91c1c", color: "#fff" }}>
+                      <td colSpan={3} className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm" style={{ backgroundColor: "#d71920", color: "#fff" }}>
                         AFAC Prospect Demand<br /><span className="font-normal text-xs">NOT YET WON BUT ASSUMED WILL BE NEEDED</span>
                       </td>
                     </tr>
@@ -1617,7 +1617,7 @@ export default function DashboardPage() {
                                 saveAfacExclusions(newList);
                               }}
                               disabled={afacExcSaving}
-                              className="text-xs px-2 py-0.5 bg-[#dc2626] text-white rounded hover:bg-[#b91c1c] disabled:opacity-50"
+                              className="text-xs px-2 py-0.5 bg-[#e11d2e] text-white rounded hover:bg-[#d71920] disabled:opacity-50"
                             >{afacExcSaving ? "Saving…" : "Add"}</button>
                             {afacExcSaved && (
                               <span className="text-xs text-green-600 font-semibold">Saved ✓</span>

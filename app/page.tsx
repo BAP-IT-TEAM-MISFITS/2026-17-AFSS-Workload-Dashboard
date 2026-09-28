@@ -408,7 +408,7 @@ export default function BacklogPage() {
 
   const stageColor = raw
     ? "bg-purple-100 text-purple-700"
-    : stage === "Pending" ? "bg-amber-100 text-amber-700" : "bg-[#fef2f2] text-[#b91c1c]";
+    : stage === "Pending" ? "bg-amber-100 text-amber-700" : "bg-[#fef2f2] text-[#d71920]";
 
   const headers = isRawView(view)
     ? RAW_HEADERS[view]
@@ -458,9 +458,9 @@ export default function BacklogPage() {
         <div className="relative w-full sm:w-auto border-b sm:border-b-0" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => setDropdownOpen((o) => !o)}
-            className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-[#b91c1c] hover:bg-[#fee2e2] sm:border-r sm:border-[#fecaca] w-full sm:min-w-[180px]"
+            className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-[#d71920] hover:bg-[#fee2e2] sm:border-r sm:border-[#fecaca] w-full sm:min-w-[180px]"
           >
-            <span className="w-3 h-3 rounded-sm bg-[#dc2626] shrink-0" />
+            <span className="w-3 h-3 rounded-sm bg-[#e11d2e] shrink-0" />
             {companyLabel}
             <svg className="ml-auto w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -474,13 +474,13 @@ export default function BacklogPage() {
                   key={co.id}
                   onClick={() => { setView(co.id); setDropdownOpen(false); }}
                   className={`w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-[#fee2e2] ${
-                    co.id === view ? "font-semibold text-[#b91c1c]" : "text-neutral-700"
+                    co.id === view ? "font-semibold text-[#d71920]" : "text-neutral-700"
                   }`}
                 >
-                  <span className="w-3 h-3 rounded-sm bg-[#dc2626] shrink-0" />
+                  <span className="w-3 h-3 rounded-sm bg-[#e11d2e] shrink-0" />
                   {co.label}
                   {co.id === view && (
-                    <svg className="ml-auto w-4 h-4 text-[#dc2626]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="ml-auto w-4 h-4 text-[#e11d2e]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   )}
@@ -495,13 +495,13 @@ export default function BacklogPage() {
                   key={v.id}
                   onClick={() => { setView(v.id); setDropdownOpen(false); }}
                   className={`w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-[#fee2e2] ${
-                    v.id === view ? "font-semibold text-[#b91c1c]" : "text-neutral-700"
+                    v.id === view ? "font-semibold text-[#d71920]" : "text-neutral-700"
                   }`}
                 >
                   <span className="w-3 h-3 rounded-sm bg-purple-500 shrink-0" />
                   {v.label}
                   {v.id === view && (
-                    <svg className="ml-auto w-4 h-4 text-[#dc2626]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="ml-auto w-4 h-4 text-[#e11d2e]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   )}
@@ -515,7 +515,7 @@ export default function BacklogPage() {
         <select
           defaultValue=""
           onChange={e => { if (e.target.value) window.location.href = e.target.value; }}
-          className="px-5 py-3 text-sm font-medium text-[#52525b] hover:text-[#b91c1c] border-b sm:border-b-0 sm:border-r border-[#fecaca] hover:bg-[#fee2e2] bg-white cursor-pointer w-full sm:w-auto"
+          className="px-5 py-3 text-sm font-medium text-[#52525b] hover:text-[#d71920] border-b sm:border-b-0 sm:border-r border-[#fecaca] hover:bg-[#fee2e2] bg-white cursor-pointer w-full sm:w-auto"
         >
           <option value="" disabled hidden>Dashboard</option>
           <option value="/dashboard">Dashboard</option>
@@ -531,8 +531,8 @@ export default function BacklogPage() {
                 onClick={() => setStage(st)}
                 className={`flex-1 sm:flex-none px-5 py-3 text-sm font-medium border-b-2 transition-colors ${
                   st === stage
-                    ? "border-[#b91c1c] text-white bg-[#dc2626]"
-                    : "border-transparent text-[#52525b] hover:text-[#b91c1c] hover:bg-[#fee2e2]"
+                    ? "border-[#d71920] text-white bg-[#e11d2e]"
+                    : "border-transparent text-[#52525b] hover:text-[#d71920] hover:bg-[#fee2e2]"
                 }`}
               >
                 {st}
@@ -591,7 +591,7 @@ export default function BacklogPage() {
       <div className="workspace-table-wrap flex-1 overflow-auto">
         <table className="workspace-table w-full border-collapse" style={{ minWidth: "1800px" }}>
           <thead className="sticky top-0 z-10">
-            <tr style={{ backgroundColor: "#b91c1c" }}>
+            <tr style={{ backgroundColor: "#d71920" }}>
               {headers.map((h, i) => (
                 <th key={i} className="text-left text-white font-semibold text-xs uppercase tracking-wide px-3 py-2.5 whitespace-nowrap border-r border-[#ef4444] last:border-r-0">
                   {h}

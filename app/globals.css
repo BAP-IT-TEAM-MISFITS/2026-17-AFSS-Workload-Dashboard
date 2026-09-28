@@ -6,10 +6,10 @@
   color-scheme: light;
   --background: #f8fafc;
   --foreground: #111827;
-  --fire-deep: #b91c1c;
-  --fire-dark: #b91c1c;
-  --fire: #dc2626;
-  --fire-hover: #b91c1c;
+  --fire-deep: #d71920;
+  --fire-dark: #d71920;
+  --fire: #e11d2e;
+  --fire-hover: #d71920;
   --fire-soft: #fee2e2;
   --fire-border: #fecaca;
   --fire-muted: #52525b;
@@ -38,7 +38,7 @@ body {
   padding: .8rem 1.5rem;
   overflow: hidden;
   color: #fff;
-  background: linear-gradient(110deg, #b91c1c 0%, #dc2626 100%);
+  background: linear-gradient(110deg, #d71920 0%, #e11d2e 100%);
   border-bottom: 4px solid #fecaca;
 }
 
@@ -111,9 +111,9 @@ body {
   gap: 1rem;
   padding: .8rem 1.3rem .8rem 1.5rem;
   color: #fff;
-  background: linear-gradient(105deg, #b91c1c 0%, #dc2626 100%);
+  background: linear-gradient(105deg, #d71920 0%, #e11d2e 100%);
   border-bottom: 4px solid #fecaca;
-  border-left: 5px solid #991b1b;
+  border-left: 5px solid #c91f26;
   overflow: hidden;
 }
 .workspace-heading::after {
@@ -147,7 +147,7 @@ body {
 .workspace-heading .heading-action {
   border: 1px solid #fff;
   background: #fff;
-  color: #b91c1c;
+  color: #d71920;
   font-weight: 800;
 }
 .workspace-heading .heading-action:hover { background: #fee2e2; }
@@ -166,14 +166,14 @@ body {
   right: 0;
   width: 5.5rem;
   height: 5.5rem;
-  border-left: 1px solid rgba(255,255,255,.15);
-  background: linear-gradient(135deg, transparent 49%, rgba(220,38,38,.32) 50%);
+  border-left: 1px solid rgba(225,29,46,.12);
+  background: linear-gradient(135deg, transparent 49%, rgba(225,29,46,.1) 50%);
   pointer-events: none;
 }
 .auth-kicker {
   display: block;
   margin-bottom: 1.5rem;
-  color: #fecdd3;
+  color: #d71920;
   font-size: .62rem;
   font-weight: 800;
   letter-spacing: .17em;
