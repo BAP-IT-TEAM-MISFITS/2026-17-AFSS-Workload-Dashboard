@@ -20,15 +20,27 @@ export async function gcsRead(key: string): Promise<string | null> {
   }
 }
 
-export async function gcsWrite(key: string, data: string): Promise<void> {
+export async function gcsWrite(key: string, data: string): Promise<boolean> {
   const client = getClient();
-  if (!client) return;
+  if (!client) return false;
   try {
     await client.storage.bucket(client.bucket).file(key).save(data, {
       contentType: "application/json",
       resumable: false,
     });
+    return true;
   } catch {
-    // Ignore write failures — local cache is still valid
+    return false;
+  }
+}
+
+export async function gcsDelete(key: string): Promise<boolean> {
+  const client = getClient();
+  if (!client) return false;
+  try {
+    await client.storage.bucket(client.bucket).file(key).delete({ ignoreNotFound: true });
+    return true;
+  } catch {
+    return false;
   }
 }

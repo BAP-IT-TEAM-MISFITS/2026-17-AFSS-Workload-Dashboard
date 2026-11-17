@@ -313,6 +313,7 @@ export default function BacklogPage() {
   const [loadingSecs, setLoadingSecs] = useState(0);
   const [error,       setError]       = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [dataStale, setDataStale] = useState(false);
   const [refreshing,  setRefreshing]  = useState(false);
   // No picker here — inherited from whatever month was last selected on the
   // Dashboard (see DASHBOARD_MONTH_FILTER_KEY there), so switching months on
@@ -386,7 +387,9 @@ export default function BacklogPage() {
       } else {
         setJobs(Array.isArray(data) ? data : (data.rows ?? data.Result ?? []));
         setError(null);
-        setLastUpdated(new Date());
+        const snapshot = Number(res.headers.get("X-AFSS-Snapshot-At"));
+        setLastUpdated(snapshot > 0 ? new Date(snapshot) : null);
+        setDataStale(res.headers.get("X-AFSS-Stale") === "1");
       }
     } catch (e) {
       setError(String(e));
@@ -559,6 +562,7 @@ export default function BacklogPage() {
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          {dataStale && <span className="text-amber-200">Snapshot may be outdated</span>}
           {refreshing && <span className="text-[#fff1eb]">Syncing…</span>}
           {lastUpdated && <span className="hidden sm:inline">Updated: {lastUpdated.toLocaleTimeString()}</span>}
           <button

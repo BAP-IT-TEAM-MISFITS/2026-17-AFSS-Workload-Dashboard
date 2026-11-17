@@ -9,11 +9,11 @@ import type { NextRequest } from 'next/server'
 // accidentally exempt a future unrelated route sharing one of these
 // extensions.
 const PUBLIC_ASSET_PATHS = new Set([
-  '/logo-evacuation.png', '/logo-fire-audits.png',
+  '/logo-evacuation.png', '/logo-fire-audits.png', '/logo-redmen.png',
   '/file.svg', '/globe.svg', '/next.svg', '/vercel.svg', '/window.svg',
 ])
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   if (PUBLIC_ASSET_PATHS.has(pathname)) {
@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
   // endpoint (pinged by Cloud Scheduler every few minutes so SimPRO data stays
   // fresh without anyone visiting; warmAll/warmTechSupport dedupe + respect
   // TTLs, so unauthenticated hits cannot amplify SimPRO API traffic)
-  if (pathname.startsWith('/api/auth') || pathname === '/login' || pathname === '/api/warmup') {
+  if (pathname.startsWith('/api/auth') || pathname === '/login' || pathname === '/api/warmup' || pathname === '/api/webhook/simpro') {
     return NextResponse.next()
   }
 

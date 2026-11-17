@@ -1,7 +1,8 @@
 import { promises as fs } from "fs";
 import { join } from "path";
 import os from "os";
-import { gcsRead, gcsWrite } from "../../lib/gcsCache";
+import { gcsRead, gcsWrite, gcsDelete } from "../../lib/gcsCache";
+import { fetchScheduleDay } from "../../lib/simproSchedules";
 
 const BASE_URL = process.env.SIMPRO_BASE_URL;
 const TOKEN    = process.env.SIMPRO_TOKEN?.replace(/^﻿/, "").trim();
@@ -13,7 +14,7 @@ const hdrs     = { Authorization: `Bearer ${TOKEN}`, "Content-Type": "applicatio
 // which must be resolved through the job's costCenters list to get here.
 const AFSS_AUDIT_CC_ID = 382;
 
-export const CACHE_TTL = 60 * 60_000;
+export const CACHE_TTL = 5 * 60_000;
 export const EXCLUSIONS_FILE = join(process.cwd(), "data", "afac-exclusions.json");
 
 export function cacheFile(filterYear?: number, filterMonth?: number) {
@@ -110,7 +111,7 @@ async function simGet(path: string): Promise<unknown> {
       if (a < 5) await sleep(500 * (a + 1));
     }
   }
-  return null;
+  throw new Error(`SimPRO request failed: ${path}`);
 }
 
 function fmt(d: Date): string {
@@ -153,7 +154,7 @@ async function fetchAfssAuditBlocks(start: Date, end: Date, exclusions: Set<stri
     if (cursor.getDay() !== 0 && cursor.getDay() !== 6) {
       const day = fmt(new Date(cursor));
       if (!exclusions.has(day)) {
-        const raw = listOf(await simGet(`/api/v1.0/companies/8/schedules/?Date=${day}&pageSize=250`) ?? []);
+        const raw = await fetchScheduleDay(8, day);
         allBlocks = allBlocks.concat(raw);
       }
       await sleep(80);
@@ -185,7 +186,7 @@ async function fetchAfssAuditBlocks(start: Date, end: Date, exclusions: Set<stri
       const lists = await Promise.all(
         chunk.map(key => {
           const { jobId, sectionId } = uniqueJobSections.get(key)!;
-          return simGet(`/api/v1.0/companies/8/jobs/${jobId}/sections/${sectionId}/costCenters/?columns=ID,CostCenter&pageSize=250`).catch(() => []);
+          return simGet(`/api/v1.0/companies/8/jobs/${jobId}/sections/${sectionId}/costCenters/?columns=ID,CostCenter&pageSize=250`);
         })
       );
       chunk.forEach((key, idx) => {
@@ -227,7 +228,7 @@ async function fetchAfssAuditBlocksCached(filterYear: number | undefined, filter
     if (hit && Date.now() - hit.ts < CACHE_TTL) return hit.data;
   }
   let p = _auditBlocksInFlight.get(key);
-  if (!p || force) {
+  if (!p) {
     p = fetchAfssAuditBlocks(start, end, exclusions).finally(() => _auditBlocksInFlight.delete(key));
     _auditBlocksInFlight.set(key, p);
   }
@@ -372,6 +373,7 @@ export async function getRawRows(filterYear?: number, filterMonth?: number, forc
 // Deletes all cached month files so the next load (forced or not) recomputes
 // with the current exclusions instead of serving stale pre-exclusion numbers.
 export async function clearCache(): Promise<void> {
+  _auditBlocksCache.clear();
   const dir = process.env.CACHE_DIR ?? os.tmpdir();
   try {
     const files = await fs.readdir(dir);
@@ -381,6 +383,16 @@ export async function clearCache(): Promise<void> {
         .map(f => fs.unlink(join(dir, f)).catch(() => {})),
     );
   } catch { /* no cache dir yet — nothing to clear */ }
+
+  // GCS also holds snapshots. If they survive an exclusion edit, a fresh
+  // container can restore the old figures even after its local cache is cleared.
+  const aest = new Date(Date.now() + 10 * 60 * 60 * 1000);
+  const year = aest.getUTCFullYear();
+  const keys: string[] = [];
+  for (let month = aest.getUTCMonth() + 1; month <= 12; month++) {
+    keys.push(gcsKeyFor(year, month), rawGcsKeyFor(year, month));
+  }
+  await Promise.all(keys.map(key => gcsDelete(key)));
 }
 
 // Keeps every selectable month (current through December) pre-computed and

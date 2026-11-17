@@ -18,14 +18,14 @@ export const CACHE_TTL = 5 * 60_000; // 5 minutes — near-live auto-sync with h
 
 export type CacheEntry = { data: Record<string, unknown>[]; ts: number; partial?: boolean };
 
-// Company 10 (AE Evac) excluded from warmup gate — SimPRO rate limits are
-// exhausted after companies 1 and 8, causing company 10 to hang indefinitely.
-// Company 10 warms itself on first user access (one-time 60-90s cold fetch).
+// Refresh every company and stage using the same freshness window.
 export const WARM_COMBOS = [
   { company: 1, stage: "Pending"  },
   { company: 1, stage: "Progress" },
   { company: 8, stage: "Pending"  },
   { company: 8, stage: "Progress" },
+  { company: 10, stage: "Pending" },
+  { company: 10, stage: "Progress" },
 ] as const;
 
 // Use GCS-mounted volume in production (CACHE_DIR env var), tmpdir in dev.
@@ -55,8 +55,8 @@ export async function writeCache(
   partial = false,
 ): Promise<void> {
   const json = JSON.stringify({ data, ts: Date.now(), partial });
-  fs.writeFile(cacheFile(company, stage), json, "utf-8").catch(() => {});
-  gcsWrite(GCS_KEY(company, stage), json); // persist to GCS for next deployment
+  await fs.writeFile(cacheFile(company, stage), json, "utf-8");
+  await gcsWrite(GCS_KEY(company, stage), json); // persist to GCS for next deployment
 }
 
 // Force the next /api/data request for this company/stage to refetch from
@@ -73,7 +73,7 @@ async function readCacheFromGcs(company: number, stage: string): Promise<CacheEn
   try {
     const entry = JSON.parse(remote) as CacheEntry;
     // Write to local so request handlers can read without GCS
-    fs.writeFile(cacheFile(company, stage), remote, "utf-8").catch(() => {});
+    await fs.writeFile(cacheFile(company, stage), remote, "utf-8");
     return entry;
   } catch { return null; }
 }
@@ -113,7 +113,7 @@ export function list(data: unknown): Record<string, unknown>[] {
     const d = data as Record<string, unknown>;
     if (Array.isArray(d.Result)) return d.Result as Record<string, unknown>[];
   }
-  return [];
+  throw new Error("Unexpected SimPRO list response");
 }
 
 function chunk<T>(arr: T[], size: number): T[][] {
@@ -122,17 +122,15 @@ function chunk<T>(arr: T[], size: number): T[][] {
   return out;
 }
 
-// Paginate a filtered list endpoint. Errors return what was collected so far —
-// a partial enrichment map only degrades individual fields, never drops jobs.
+// Never treat an incomplete enrichment result as current data. Missing schedule
+// pages would otherwise move booked jobs into the tentative row.
 async function listAllPages(pathBase: string): Promise<Record<string, unknown>[]> {
   let all: Record<string, unknown>[] = [];
   for (let page = 1; page <= 10; page++) {
-    let items: Record<string, unknown>[];
-    try {
-      items = list(await simGet(`${pathBase}&page=${page}`));
-    } catch { break; }
+    const items = list(await simGet(`${pathBase}&page=${page}`));
     all = all.concat(items);
     if (items.length < 250) break;
+    if (page === 10) throw new Error(`SimPRO result exceeds ten pages: ${pathBase}`);
   }
   return all;
 }
@@ -148,13 +146,12 @@ export async function fetchCFSPJobs(company: number, stage: string): Promise<Rec
     // Sequential — parallel page fetches caused rate-limit drops on Cloud Run
     // when multiple warmAll combos ran concurrently.
     for (let page = 2; page <= 10; page++) {
-      try {
-        const nextPage = list(await simGet(
-          `/api/v1.0/companies/${company}/jobs/?pageSize=250&columns=${LIST_COLS}&Stage=${stage}&page=${page}`
-        ));
-        allItems = allItems.concat(nextPage);
-        if (nextPage.length < 250) break;
-      } catch { break; }
+      const nextPage = list(await simGet(
+        `/api/v1.0/companies/${company}/jobs/?pageSize=250&columns=${LIST_COLS}&Stage=${stage}&page=${page}`
+      ));
+      allItems = allItems.concat(nextPage);
+      if (nextPage.length < 250) break;
+      if (page === 10) throw new Error(`SimPRO jobs exceed ten pages for ${company}/${stage}`);
     }
   }
 
@@ -169,26 +166,11 @@ export async function fetchCFSPJobs(company: number, stage: string): Promise<Rec
 export async function fetchAndCache(company: number, stage: string): Promise<Record<string, unknown>[]> {
   const cfspJobs = await fetchCFSPJobs(company, stage);
 
-  // A fresh container has no local cache even when GCS holds good data — check
-  // GCS before trusting an empty/shrunken result, so a transient SimPRO glitch
-  // can't poison the persisted cache with [] and wipe the dashboard.
-  let existing = await readCacheRaw(company, stage);
-  if (!existing || existing.data.length === 0) {
-    existing = await readCacheFromGcs(company, stage);
-  }
-
+  // A successful, fully paginated response is authoritative, including zero
+  // jobs. Keeping old jobs after completion made legitimate drops permanent.
   if (cfspJobs.length === 0) {
-    // Don't overwrite a good cache with an empty result — may be a transient API glitch.
-    if (existing && existing.data.length > 0) return existing.data;
     await writeCache(company, stage, []);
     return [];
-  }
-
-  // Don't overwrite a good cache with a suspiciously smaller result either — SimPRO
-  // rate-limiting or a dropped page mid-fetch can silently truncate the job list
-  // without throwing. Treat a >50% drop as an unreliable glitch and retry next cycle.
-  if (existing && existing.data.length >= 3 && cfspJobs.length < existing.data.length * 0.5) {
-    return existing.data;
   }
 
   const jobIds = cfspJobs.map((j) => j.ID as string | number);
@@ -294,9 +276,9 @@ export function fetchAndCacheDeduped(company: number, stage: string): Promise<Re
 
 // Warm combos sequentially. Restore from GCS first — this makes warmAll instant
 // on every deployment after the first (GCS has the data from the previous run).
-// Only falls through to SimPRO if GCS is empty, stale (> 4h), or has no jobs.
+// Fetch SimPRO when the shared snapshot has expired.
 export async function warmAll(): Promise<{ company: number; stage: string; ok: boolean; ms: number; source?: string }[]> {
-  const GCS_WARM_TTL = 4 * 60 * 60 * 1000; // 4 hours
+  const GCS_WARM_TTL = CACHE_TTL;
   const results = [];
   for (const { company, stage } of WARM_COMBOS) {
     const t = Date.now();

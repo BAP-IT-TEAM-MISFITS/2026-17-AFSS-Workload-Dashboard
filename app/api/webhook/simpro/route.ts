@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
+import { timingSafeEqual } from "crypto";
 import { warmTechSupport, obItCacheFile, qaCacheFile } from "../../tech-support/core";
 import { clearCache as clearAfssCache, WARM_COMBOS } from "../../../lib/simpro";
 
@@ -23,13 +24,21 @@ function techSupportCacheFiles(): string[] {
 }
 
 export async function POST(req: Request) {
+  const secret = process.env.SIMPRO_WEBHOOK_SECRET;
+  if (!secret) return NextResponse.json({ error: "Webhook secret is not configured" }, { status: 503 });
+  const supplied = req.headers.get("x-afss-webhook-secret") ?? "";
+  const expectedBytes = Buffer.from(secret);
+  const suppliedBytes = Buffer.from(supplied);
+  if (suppliedBytes.length !== expectedBytes.length || !timingSafeEqual(suppliedBytes, expectedBytes)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   try {
     const body = await req.json().catch(() => ({}));
     const event = (body as Record<string, unknown>).event ?? "unknown";
 
     const isScheduleEvent =
       typeof event === "string" &&
-      (event.includes("schedule") || event === "unknown");
+      (event.toLowerCase().includes("schedule") || event === "unknown");
 
     if (isScheduleEvent) {
       // Step 1: clear stale cache files — tech support (OB/IT/QA) and the

@@ -1,6 +1,22 @@
 import { NextResponse } from "next/server";
 import { readLeaveCache, scanMonthLeave, writeLeaveCache, buildResponse, CACHE_TTL } from "./core";
 
+export const maxDuration = 300;
+const inFlight = new Map<string, Promise<Awaited<ReturnType<typeof scanMonthLeave>>>>();
+
+function refresh(year: number, month: number) {
+  const key = `${year}-${month}`;
+  let pending = inFlight.get(key);
+  if (!pending) {
+    pending = scanMonthLeave(year, month).then(async data => {
+      await writeLeaveCache(data, year, month);
+      return data;
+    }).finally(() => inFlight.delete(key));
+    inFlight.set(key, pending);
+  }
+  return pending;
+}
+
 
 export async function GET(req: Request) {
   const url   = new URL(req.url);
@@ -17,13 +33,15 @@ export async function GET(req: Request) {
   if (cached) {
     const fresh = Date.now() - cached.ts < CACHE_TTL;
     if (fresh && !force) {
-      return NextResponse.json(await buildResponse(cached.data, year, month), { headers: { "Cache-Control": "no-store" } });
+      return NextResponse.json(await buildResponse(cached.data, year, month), { headers: { "Cache-Control": "no-store", "X-AFSS-Stale": "0", "X-AFSS-Snapshot-At": String(cached.ts) } });
     }
-    scanMonthLeave(year, month).then(d => writeLeaveCache(d, year, month)).catch(() => {});
-    return NextResponse.json(await buildResponse(cached.data, year, month), { headers: { "Cache-Control": "no-store" } });
   }
 
-  const leaveDays = await scanMonthLeave(year, month);
-  await writeLeaveCache(leaveDays, year, month);
-  return NextResponse.json(await buildResponse(leaveDays, year, month), { headers: { "Cache-Control": "no-store" } });
+  try {
+    const leaveDays = await refresh(year, month);
+    return NextResponse.json(await buildResponse(leaveDays, year, month), { headers: { "Cache-Control": "no-store", "X-AFSS-Stale": "0", "X-AFSS-Snapshot-At": String(Date.now()) } });
+  } catch {
+    if (cached) return NextResponse.json(await buildResponse(cached.data, year, month), { headers: { "Cache-Control": "no-store", "X-AFSS-Stale": "1", "X-AFSS-Snapshot-At": String(cached.ts) } });
+    return NextResponse.json({ error: "Leave data is unavailable" }, { status: 503 });
+  }
 }

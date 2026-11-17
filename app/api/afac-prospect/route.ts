@@ -32,25 +32,16 @@ export async function GET(req: Request) {
 
   const entry = await readCachedEntry(filterYear, filterMonth);
 
-  if (entry && !force) {
+  if (entry && !force && Date.now() - entry.ts < CACHE_TTL) {
     const fresh = Date.now() - entry.ts < CACHE_TTL;
-    if (!fresh) {
-      // Stale-while-revalidate: this cumulative computation can take a
-      // minute+ on a cold month, which left the widget blank while the user
-      // was still clicking through months. Serve the last known value
-      // immediately and refresh in the background for next time. In
-      // practice /api/warmup keeps every month fresh automatically, so this
-      // path is just a safety net, not the normal case.
-      recompute(filterYear, filterMonth).catch(() => {});
-    }
-    return NextResponse.json(entry.data, { headers: { "Cache-Control": "no-store" } });
+    return NextResponse.json(entry.data, { headers: { "Cache-Control": "no-store", "X-AFSS-Stale": fresh ? "0" : "1" } });
   }
 
   try {
     const data = await recompute(filterYear, filterMonth, force);
-    return NextResponse.json(data, { headers: { "Cache-Control": "no-store" } });
+    return NextResponse.json(data, { headers: { "Cache-Control": "no-store", "X-AFSS-Stale": "0" } });
   } catch (err) {
-    if (entry) return NextResponse.json(entry.data, { headers: { "Cache-Control": "no-store" } });
+    if (entry) return NextResponse.json(entry.data, { headers: { "Cache-Control": "no-store", "X-AFSS-Stale": "1" } });
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }
