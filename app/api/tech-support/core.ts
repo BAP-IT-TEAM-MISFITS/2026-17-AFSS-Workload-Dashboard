@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import { join } from "path";
 import os from "os";
 import { gcsWrite, gcsRead } from "../../lib/gcsCache";
+import { fetchScheduleDay } from "../../lib/simproSchedules";
 
 const BASE_URL = process.env.SIMPRO_BASE_URL;
 const TOKEN    = process.env.SIMPRO_TOKEN?.replace(/^﻿/, "").trim();
@@ -14,7 +15,7 @@ const TEAM_IDS = new Set<number>([1581, 15, 1753]);
 export const RATE = 100;
 
 export const OB_IT_CACHE_TTL = 5  * 60_000;
-export const QA_CACHE_TTL    = 60 * 60_000;
+export const QA_CACHE_TTL    = 5 * 60_000;
 
 // Cost centres the SimPRO Schedule Breakdown report deliberately leaves out —
 // everything else in SimPRO's setup cost-centre list counts.
@@ -161,7 +162,7 @@ export async function readObItCache(year: number, month: number, nodc = false): 
 export async function writeObItCache(year: number, month: number, data: { otherBillable: TechSupportStats; investedTime: TechSupportStats }, nodc = false) {
   const tag = nodc ? "-nodc" : "";
   const json = JSON.stringify({ data, ts: Date.now() });
-  fs.writeFile(obItCacheFile(year, month, nodc), json, "utf-8").catch(() => {});
+  await fs.writeFile(obItCacheFile(year, month, nodc), json, "utf-8");
   gcsWrite(`afss-tech-support-v113${tag}-${year}-${String(month).padStart(2, "0")}.json`, json);
 }
 
@@ -185,7 +186,7 @@ export async function readQaCache(): Promise<{ data: QARawJob[]; ts: number } | 
 }
 export async function writeQaCache(data: QARawJob[]) {
   const json = JSON.stringify({ data, ts: Date.now() });
-  fs.writeFile(qaCacheFile(), json, "utf-8").catch(() => {});
+  await fs.writeFile(qaCacheFile(), json, "utf-8");
   gcsWrite("afss-qa-v1.json", json);
 }
 
@@ -206,40 +207,17 @@ export async function simGet(path: string): Promise<unknown> {
       const r = await fetch(`${BASE_URL}${path}`, { headers: hdrs, cache: "no-store" });
       if (r.status === 429) { await sleep(1000 * Math.pow(2, a)); continue; }
       if (r.status >= 500) { await sleep(500 * (a + 1)); continue; }
-      if (!r.ok) return [];
+      if (!r.ok) throw new Error(`SimPRO ${r.status}: ${path}`);
       return r.json();
     } catch {
       if (a < 5) await sleep(500 * (a + 1));
     }
   }
-  return [];
+  throw new Error(`SimPRO request failed: ${path}`);
 }
 
 export async function fetchDayBlocks(date: string): Promise<Record<string, unknown>[]> {
-  const all: Record<string, unknown>[] = [];
-  let page = 1;
-  while (true) {
-    let fetched: Record<string, unknown>[] = [];
-    for (let a = 0; a < 4; a++) {
-      try {
-        const r = await fetch(
-          `${BASE_URL}/api/v1.0/companies/1/schedules/?pageSize=250&page=${page}&Date=${date}&expand=CostCenter`,
-          { headers: hdrs, cache: "no-store" }
-        );
-        if (r.status === 429) { await sleep(1000 * Math.pow(2, a)); continue; }
-        if (!r.ok) return all;
-        const d = await r.json();
-        fetched = Array.isArray(d) ? d : (d.Result ?? []);
-        break;
-      } catch {
-        if (a < 3) await sleep(500 * (a + 1));
-      }
-    }
-    all.push(...fetched);
-    if (fetched.length < 250) break;
-    page++;
-  }
-  return all;
+  return fetchScheduleDay(1, date, true);
 }
 
 export function getFullMonthWeekdays(year: number, month: number): string[] {
@@ -314,13 +292,14 @@ export async function getTentativeStaffIds(): Promise<Set<number>> {
         }
         if (staff.length < 250) break;
         page++;
+        if (page > 10) throw new Error("SimPRO staff list exceeds ten pages");
       }
       return ids;
     } catch {
       if (attempt < 2) await sleep(2000 * (attempt + 1));
     }
   }
-  return new Set();
+  throw new Error("Unable to load tentative SimPRO staff");
 }
 
 export type BlockInfo = { staffId: number; date: string; hours: number; jobId: string; ccId: number; ccName: string; sectionId: number };
@@ -389,11 +368,11 @@ export async function fetchJobDetailsMap(jobIds: string[]): Promise<Map<string, 
   for (let i = 0; i < jobIds.length; i += BATCH) {
     const batch = jobIds.slice(i, i + BATCH);
     const results = await Promise.all(
-      batch.map(id => simGet(`/api/v1.0/companies/1/jobs/${id}?columns=ID,Stage,Customer,Totals`).catch(() => null))
+      batch.map(id => simGet(`/api/v1.0/companies/1/jobs/${id}?columns=ID,Stage,Customer,Totals`))
     );
     for (let j = 0; j < batch.length; j++) {
       const raw = results[j];
-      if (!raw) continue;
+      if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error(`Missing SimPRO job details: ${batch[j]}`);
       const d = raw as Record<string, unknown>;
       const job = (d.Result && typeof d.Result === "object" && !Array.isArray(d.Result))
         ? d.Result as Record<string, unknown> : d;
@@ -569,15 +548,17 @@ export function getQADateTo(year: number, month: number, all: boolean): string {
 let _cachedQaId: number | null | undefined = undefined;
 export async function resolvedQaId(): Promise<number | null> {
   if (_cachedQaId !== undefined) return _cachedQaId;
-  try {
-    const staff = listOf(await simGet(`/api/v1.0/companies/1/staff/?pageSize=250&columns=ID,Name`));
+  for (let page = 1; page <= 10; page++) {
+    const staff = listOf(await simGet(`/api/v1.0/companies/1/staff/?pageSize=250&columns=ID,Name&page=${page}`));
     for (const s of staff) {
       if (String(s.Name ?? "").toLowerCase().includes("quality assurance")) {
         _cachedQaId = s.ID as number;
         return _cachedQaId;
       }
     }
-  } catch {}
+    if (staff.length < 250) break;
+    if (page === 10) throw new Error("SimPRO staff list exceeds ten pages");
+  }
   _cachedQaId = null;
   return null;
 }
@@ -589,19 +570,12 @@ export async function fetchQualityAssurance(): Promise<QARawJob[]> {
   const cols = "ID,Totals,Technicians,DueDate,Customer";
   const seen = new Set<unknown>();
   let items: Record<string, unknown>[] = [];
-  try {
-    const first = listOf(await simGet(`/api/v1.0/companies/1/jobs/?pageSize=250&columns=${cols}&Stage=Pending&page=1`));
-    items = first;
-    if (first.length === 250) {
-      const extras = await Promise.all(
-        Array.from({ length: 9 }, (_, i) => i + 2).map(p =>
-          simGet(`/api/v1.0/companies/1/jobs/?pageSize=250&columns=${cols}&Stage=Pending&page=${p}`)
-            .then(listOf).catch((): Record<string, unknown>[] => [])
-        )
-      );
-      for (const page of extras) { items = items.concat(page); if (page.length < 250) break; }
-    }
-  } catch { return rawJobs; }
+  for (let page = 1; page <= 10; page++) {
+    const batch = listOf(await simGet(`/api/v1.0/companies/1/jobs/?pageSize=250&columns=${cols}&Stage=Pending&page=${page}`));
+    items = items.concat(batch);
+    if (batch.length < 250) break;
+    if (page === 10) throw new Error("SimPRO QA jobs exceed ten pages");
+  }
   for (const job of items) {
     if (seen.has(job.ID)) continue;
     const techs = job.Technicians as Record<string, unknown>[] | undefined;
@@ -620,10 +594,10 @@ export async function fetchQualityAssurance(): Promise<QARawJob[]> {
 export const _obItInFlight = new Map<string, Promise<{ regular: { otherBillable: TechSupportStats; investedTime: TechSupportStats }; nodc: { otherBillable: TechSupportStats; investedTime: TechSupportStats } }>>();
 export function buildObItDeduped(year: number, month: number, forceNew = false) {
   const key = `${year}-${month}`;
-  if (forceNew) _obItInFlight.delete(key);
+
   let p = _obItInFlight.get(key);
   if (!p) {
-    p = buildObIt(year, month).finally(() => _obItInFlight.delete(key));
+    p = buildObIt(year, month, forceNew).finally(() => _obItInFlight.delete(key));
     _obItInFlight.set(key, p);
   }
   return p;
@@ -669,7 +643,7 @@ async function buildBlocksAndJobMapCached(year: number, month: number, force = f
     if (hit && Date.now() - hit.ts < OB_IT_CACHE_TTL) return hit.data;
   }
   let p = _blocksJobMapInFlight.get(key);
-  if (!p || force) {
+  if (!p) {
     p = buildBlocksAndJobMap(year, month).finally(() => _blocksJobMapInFlight.delete(key));
     _blocksJobMapInFlight.set(key, p);
   }
@@ -704,7 +678,7 @@ async function buildObItRaw(year: number, month: number, excludeDatacom = false,
         otherBillable: [...prev.otherBillable, ...otherBillable],
         investedTime:  [...prev.investedTime,  ...investedTime],
       };
-    } catch { /* proceed with target-month-only rows */ }
+    } catch { throw new Error(`Unable to complete cumulative raw totals for ${year}-${month}`); }
   }
 
   return { otherBillable, investedTime };
@@ -713,7 +687,7 @@ async function buildObItRaw(year: number, month: number, excludeDatacom = false,
 const _obItRawInFlight = new Map<string, Promise<{ otherBillable: TechSupportRawRow[]; investedTime: TechSupportRawRow[] }>>();
 function buildObItRawDeduped(year: number, month: number, excludeDatacom: boolean, forceNew = false) {
   const key = `${year}-${month}-${excludeDatacom ? "nodc" : "dc"}`;
-  if (forceNew) _obItRawInFlight.delete(key);
+
   let p = _obItRawInFlight.get(key);
   if (!p) {
     p = buildObItRaw(year, month, excludeDatacom, forceNew).finally(() => _obItRawInFlight.delete(key));
@@ -740,8 +714,8 @@ export async function getObItRaw(year: number, month: number, excludeDatacom = f
   }
 }
 
-async function buildObIt(year: number, month: number): Promise<{ regular: { otherBillable: TechSupportStats; investedTime: TechSupportStats }; nodc: { otherBillable: TechSupportStats; investedTime: TechSupportStats } }> {
-  const { blockList, jobMap, ccCache, afssIds } = await buildBlocksAndJobMapCached(year, month);
+async function buildObIt(year: number, month: number, force = false): Promise<{ regular: { otherBillable: TechSupportStats; investedTime: TechSupportStats }; nodc: { otherBillable: TechSupportStats; investedTime: TechSupportStats } }> {
+  const { blockList, jobMap, ccCache, afssIds } = await buildBlocksAndJobMapCached(year, month, force);
   const regular = {
     otherBillable: calcOtherBillable(blockList, jobMap, ccCache, false, afssIds),
     investedTime:  calcInvestedTime(blockList, jobMap, ccCache, false, afssIds),
@@ -770,16 +744,16 @@ async function buildObIt(year: number, month: number): Promise<{ regular: { othe
     let curNodc = await readObItCache(prevYear, prevMonth, true);
     // A stale predecessor-month cache would bake already-past days into the
     // future-month total — treat it the same as a missing one.
-    if (curReg  && Date.now() - curReg.ts  > OB_IT_CACHE_TTL) curReg  = null;
-    if (curNodc && Date.now() - curNodc.ts > OB_IT_CACHE_TTL) curNodc = null;
+    if (curReg  && (force || Date.now() - curReg.ts  > OB_IT_CACHE_TTL)) curReg  = null;
+    if (curNodc && (force || Date.now() - curNodc.ts > OB_IT_CACHE_TTL)) curNodc = null;
     if (!curReg || !curNodc) {
       try {
-        const curBuilt = await buildObItDeduped(prevYear, prevMonth);
+        const curBuilt = await buildObItDeduped(prevYear, prevMonth, force);
         await writeObItCache(prevYear, prevMonth, curBuilt.regular, false);
         await writeObItCache(prevYear, prevMonth, curBuilt.nodc,    true);
         curReg  = { data: curBuilt.regular, ts: Date.now() };
         curNodc = { data: curBuilt.nodc,    ts: Date.now() };
-      } catch { /* proceed with target-month-only data */ }
+      } catch { throw new Error(`Unable to complete cumulative support totals for ${year}-${month}`); }
     }
     if (curReg) {
       regular.otherBillable = addStats(curReg.data.otherBillable, regular.otherBillable);
@@ -795,8 +769,8 @@ async function buildObIt(year: number, month: number): Promise<{ regular: { othe
 }
 
 export let _qaInFlight: Promise<QARawJob[]> | null = null;
-export function buildQaDeduped(forceNew = false): Promise<QARawJob[]> {
-  if (forceNew) _qaInFlight = null;
+export function buildQaDeduped(_forceNew = false): Promise<QARawJob[]> {
+
   if (!_qaInFlight) {
     _qaInFlight = fetchQualityAssurance().finally(() => { _qaInFlight = null; });
   }

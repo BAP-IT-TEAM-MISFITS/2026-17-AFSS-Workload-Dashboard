@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     const force = new URL(req.url).searchParams.get("force") === "1";
 
     const entry = await readCacheRaw(COMPANY, STAGE);
-    if (entry && entry.data.length > 0 && !entry.partial) {
+    if (entry && !entry.partial) {
       const fresh = Date.now() - entry.ts < CACHE_TTL;
 
       if (!force && fresh) {

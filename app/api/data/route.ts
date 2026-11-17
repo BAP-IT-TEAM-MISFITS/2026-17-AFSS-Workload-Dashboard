@@ -7,6 +7,16 @@ import {
 
 export const maxDuration = 300;
 
+function snapshotResponse(data: Record<string, unknown>[], ts: number, stale: boolean) {
+  return NextResponse.json(data, {
+    headers: {
+      "Cache-Control": "no-store",
+      "X-AFSS-Snapshot-At": String(ts),
+      "X-AFSS-Stale": stale ? "1" : "0",
+    },
+  });
+}
+
 export async function GET(req: Request) {
   try {
     const url     = new URL(req.url);
@@ -15,29 +25,27 @@ export async function GET(req: Request) {
     const force   = url.searchParams.get("force") === "1";
 
     const entry = await readCacheRaw(company, stage);
-    if (entry && entry.data.length > 0 && !entry.partial) {
+    if (entry && !entry.partial) {
       const fresh = Date.now() - entry.ts < CACHE_TTL;
 
       if (!force && fresh) {
-        return NextResponse.json(entry.data);
+        return snapshotResponse(entry.data, entry.ts, false);
       }
 
-      if (force) {
-        try {
+      try {
           const data = await fetchAndCacheDeduped(company, stage);
-          return NextResponse.json(data);
-        } catch {
-          return NextResponse.json(entry.data);
-        }
+          const updated = await readCacheRaw(company, stage);
+          return snapshotResponse(data, updated?.ts ?? entry.ts, !updated || updated.ts === entry.ts);
+      } catch {
+        return snapshotResponse(entry.data, entry.ts, true);
       }
 
-      fetchAndCacheDeduped(company, stage).catch(() => {});
-      return NextResponse.json(entry.data);
     }
 
     // Cold cache — fetch directly, no gate blocking.
     const data = await fetchAndCacheDeduped(company, stage);
-    return NextResponse.json(data);
+    const updated = await readCacheRaw(company, stage);
+    return snapshotResponse(data, updated?.ts ?? Date.now(), !updated);
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }

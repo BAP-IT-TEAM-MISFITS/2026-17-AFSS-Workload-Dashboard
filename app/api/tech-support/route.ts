@@ -123,6 +123,7 @@ export async function GET(req: Request) {
   const nodc       = url.searchParams.get("excludeDatacom") === "1";
   const obItCached = await readObItCache(year, month, nodc);
   const obItFresh  = obItCached && (Date.now() - obItCached.ts < OB_IT_CACHE_TTL);
+  let stale = false;
   let obItData: { otherBillable: { jobs: number; hours: number; amount: number }; investedTime: { jobs: number; hours: number; amount: number } };
   if (obItFresh && !force) {
     obItData = obItCached.data;
@@ -134,7 +135,9 @@ export async function GET(req: Request) {
       await writeObItCache(year, month, built.nodc,    true);
       obItData = nodc ? built.nodc : built.regular;
     } catch {
-      obItData = obItCached?.data ?? { otherBillable: { jobs: 0, hours: 0, amount: 0 }, investedTime: { jobs: 0, hours: 0, amount: 0 } };
+      if (!obItCached) return NextResponse.json({ error: "Technical support data is unavailable" }, { status: 503 });
+      obItData = obItCached.data;
+      stale = true;
     }
   }
 
@@ -148,7 +151,9 @@ export async function GET(req: Request) {
       qaRawJobs = await buildQaDeduped(force);
       await writeQaCache(qaRawJobs);
     } catch {
-      qaRawJobs = qaCached?.data ?? [];
+      if (!qaCached) return NextResponse.json({ error: "Quality assurance data is unavailable" }, { status: 503 });
+      qaRawJobs = qaCached.data;
+      stale = true;
     }
   }
 
@@ -158,6 +163,6 @@ export async function GET(req: Request) {
       investedTime:     obItData.investedTime,
       qualityAssurance: aggregateQA(qaRawJobs, dateTo),
     } satisfies TechSupportResponse,
-    { headers: { "Cache-Control": "no-store" } }
+    { headers: { "Cache-Control": "no-store", "X-AFSS-Stale": stale ? "1" : "0" } }
   );
 }

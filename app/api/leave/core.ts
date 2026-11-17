@@ -2,10 +2,8 @@ import { promises as fs } from "fs";
 import { join } from "path";
 import os from "os";
 import { gcsWrite } from "../../lib/gcsCache";
-
-const BASE_URL = process.env.SIMPRO_BASE_URL;
-const TOKEN    = process.env.SIMPRO_TOKEN?.replace(/^﻿/, "").trim();
-const hdrs     = { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" };
+import { groupConsecutive } from "../../lib/leaveDates";
+import { fetchScheduleDay } from "../../lib/simproSchedules";
 
 const LEAVE_REFS = new Set(["1", "2"]); // 1 = Annual Leave, 2 = Sick/Personal Leave
 
@@ -137,7 +135,7 @@ export function remainingWorkingDays(year: number, month: number, phDates: Set<s
 }
 
 const TEAM_IDS = new Set<number>(TEAM.map(m => m.id));
-export const CACHE_TTL = 60 * 60_000;
+export const CACHE_TTL = 5 * 60_000;
 
 export type LeaveScanResult = {
   leave: Record<number, string[]>;
@@ -165,28 +163,12 @@ export async function readLeaveCache(year: number, month: number): Promise<Leave
 
 export async function writeLeaveCache(data: LeaveScanResult, year: number, month: number): Promise<void> {
   const json = JSON.stringify({ data, ts: Date.now() });
-  fs.writeFile(cacheFile(year, month), json, "utf-8").catch(() => {});
+  await fs.writeFile(cacheFile(year, month), json, "utf-8");
   gcsWrite(gcsLeaveKey(year, month), json);
 }
 
-function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)); }
-
 async function fetchDayBlocks(date: string): Promise<Record<string, unknown>[]> {
-  for (let attempt = 0; attempt < 4; attempt++) {
-    try {
-      const r = await fetch(
-        `${BASE_URL}/api/v1.0/companies/1/schedules/?pageSize=250&Date=${date}`,
-        { headers: hdrs, cache: "no-store" }
-      );
-      if (r.status === 429) { await sleep(1000 * Math.pow(2, attempt)); continue; }
-      if (!r.ok) return [];
-      const d = await r.json();
-      return Array.isArray(d) ? d : (d.Result ?? []);
-    } catch {
-      if (attempt < 3) await sleep(500 * (attempt + 1));
-    }
-  }
-  return [];
+  return fetchScheduleDay(1, date);
 }
 
 function isWeekday(date: Date): boolean {
@@ -198,19 +180,19 @@ export async function scanMonthLeave(year: number, month: number): Promise<Leave
   const leaveDays: Record<number, string[]> = { 1581: [], 15: [], 1753: [] };
   const phDays:    Record<number, string[]> = { 1581: [], 15: [], 1753: [] };
   const daysInMonth = new Date(year, month, 0).getDate();
-  const today       = new Date();
-  const scanTo = Math.min(daysInMonth, year === today.getFullYear() && month === today.getMonth() + 1
-    ? today.getDate() + 7
-    : daysInMonth
-  );
   const days: string[] = [];
-  for (let d = 1; d <= scanTo; d++) {
+  for (let d = 1; d <= daysInMonth; d++) {
     const date = new Date(year, month - 1, d);
     if (isWeekday(date)) {
       days.push(`${year}-${String(month).padStart(2, "0")}-${String(d).padStart(2, "0")}`);
     }
   }
-  const results = await Promise.all(days.map(fetchDayBlocks));
+  // Scan the entire month so leave booked later than next week is reflected
+  // in current-month supply. Bound concurrency to respect SimPRO rate limits.
+  const results: Record<string, unknown>[][] = [];
+  for (let i = 0; i < days.length; i += 4) {
+    results.push(...await Promise.all(days.slice(i, i + 4).map(fetchDayBlocks)));
+  }
   for (let j = 0; j < days.length; j++) {
     const dateStr = days[j];
     for (const block of results[j]) {
@@ -222,28 +204,6 @@ export async function scanMonthLeave(year: number, month: number): Promise<Leave
     }
   }
   return { leave: leaveDays, publicHoliday: phDays };
-}
-
-export function groupConsecutive(dates: string[]): { from: string; to: string }[] {
-  if (dates.length === 0) return [];
-  const sorted = [...dates].sort();
-  const ranges: { from: string; to: string }[] = [];
-  let start = sorted[0];
-  let prev  = sorted[0];
-  for (let i = 1; i < sorted.length; i++) {
-    const cur  = new Date(sorted[i]);
-    const last = new Date(prev);
-    const gap  = (cur.getTime() - last.getTime()) / 86_400_000;
-    if (gap <= 3) {
-      prev = sorted[i];
-    } else {
-      ranges.push({ from: start, to: prev });
-      start = sorted[i];
-      prev  = sorted[i];
-    }
-  }
-  ranges.push({ from: start, to: prev });
-  return ranges;
 }
 
 export async function buildResponse(scan: LeaveScanResult, year: number, month: number) {

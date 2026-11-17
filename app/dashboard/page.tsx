@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import React from "react";
 import Link from "next/link";
+import { remainingSupplyHours } from "../lib/leaveDates";
+import { statusKey } from "../lib/jobStatus";
 
 type RawJob = Record<string, unknown>;
 
@@ -33,28 +35,6 @@ const STATUS_ROWS = [
   { key: "tentative", label: "Tentative Awaiting Scheduling",              bg: "#92400e", color: "#fff" },
   { key: "complete",  label: "Attendance Complete/Results To Be Released",  bg: "#64748b", color: "#fff" },
 ] as const;
-
-function s(v: unknown): string {
-  if (v == null) return "";
-  if (typeof v === "string") return v;
-  if (typeof v === "number") return String(v);
-  return "";
-}
-
-function statusKey(job: RawJob): string {
-  const stage   = s(job.Stage).toLowerCase();
-  const n       = s((job.Status as Record<string, unknown>)?.Name ?? job.Stage).toLowerCase();
-  const company = job._company as number | undefined;
-  // AE Evac (company 10) Progress = audit booked/scheduled, not attendance complete
-  if (stage === "progress" && company === 10) {
-    if (job._scheduledDate) return "scheduled";
-    return "tentative";
-  }
-  // All other Progress = attendance already done
-  if (stage === "progress" || n.includes("complete") || n.includes("released") || n.includes("attendance")) return "complete";
-  if (job._scheduledDate) return "scheduled";
-  return "tentative";
-}
 
 function jobPrice(job: RawJob): number {
   const p = Number((job.Total as Record<string, unknown>)?.ExTax ?? 0);
@@ -172,30 +152,15 @@ function isOnLeaveToday(member: TeamMember, now: Date): boolean {
   return member.leave.some(l => today >= l.from && today <= l.to);
 }
 
-function remainingLeaveDays(member: TeamMember, now: Date): number {
-  // Only count leave days from today onwards (remaining in month)
-  const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  let days = 0;
-  for (const l of member.leave) {
-    const from = new Date(Math.max(new Date(l.from).getTime(), tomorrow.getTime()));
-    const to   = new Date(Math.min(new Date(l.to).getTime(),   monthEnd.getTime()));
-    if (from > to) continue;
-    for (let d = new Date(from); d <= to; d.setDate(d.getDate() + 1)) {
-      const day = d.getDay();
-      if (day !== 0 && day !== 6) days++;
-    }
-  }
-  return days;
-}
-
 function ymd(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 function expandRange(from: string, to: string): string[] {
   const out: string[] = [];
-  for (let d = new Date(from); d <= new Date(to); d.setDate(d.getDate() + 1)) out.push(ymd(d));
+  for (let day = new Date(`${from}T12:00:00Z`); day.toISOString().slice(0, 10) <= to; day.setUTCDate(day.getUTCDate() + 1)) {
+    out.push(day.toISOString().slice(0, 10));
+  }
   return out;
 }
 
@@ -212,9 +177,8 @@ function unionHolidayCount(calendar: PublicHoliday[], bookedRanges: LeaveEntry[]
   return dates.size;
 }
 
-// Same clipping as remainingLeaveDays above, but returns the clipped ranges
-// themselves so the Staff Leave row's legend always agrees with the hour
-// totals baked into each person's supply column.
+// Clip leave entries to the displayed month so the Staff Leave legend
+// agrees with the hours deducted from supply.
 function clipEntriesToMonth(entries: LeaveEntry[], ref: Date): LeaveEntry[] {
   const tomorrow = new Date(ref.getFullYear(), ref.getMonth(), ref.getDate());
   const monthEnd = new Date(ref.getFullYear(), ref.getMonth() + 1, 0);
@@ -301,6 +265,7 @@ export default function DashboardPage() {
   const [loading,   setLoading]   = useState(Object.keys(byCompany).length === 0);
   const [hasData,   setHasData]   = useState(Object.keys(byCompany).length > 0);
   const [updated,   setUpdated]   = useState<Date | null>(() => readStoredJobsTs());
+  const [dataStale, setDataStale] = useState(Object.keys(byCompany).length > 0);
   const partialTimerRef    = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [now,            setNow]            = useState(() => new Date());
   const [team,           setTeam]           = useState<TeamMember[]>([]);
@@ -328,6 +293,7 @@ export default function DashboardPage() {
   // and in-flight fetch callbacks can discard responses for the wrong month.
   const monthFilterRef = useRef<string>(monthFilter);
   const [afacProspect,   setAfacProspect]   = useState<AfacProspect | null>(null);
+  const [afacStale, setAfacStale] = useState(false);
   const [afacExclusions, setAfacExclusions] = useState<string[]>([]);
   const [afacExcDate,    setAfacExcDate]    = useState("");
   const [afacExcSaving,  setAfacExcSaving]  = useState(false);
@@ -338,6 +304,7 @@ export default function DashboardPage() {
   const [icFiaHrs, setIcFiaHrs] = useState("");
   const [icSaving, setIcSaving] = useState(false);
   const [icSaved,  setIcSaved]  = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   // Technical Support Works — all three sections auto-fetched from API.
   // Initialise from localStorage so last-known values show instantly on refresh.
@@ -350,6 +317,8 @@ export default function DashboardPage() {
   const [qaData, setQaData] = useState<{ jobs: number; hours: number; amount: number } | null>(() => {
     try { const mf = typeof window !== "undefined" ? (new URLSearchParams(window.location.search).get("m") ?? "all") : "all"; const s = localStorage.getItem(`d1-ts-qa-${mf}`); return s ? JSON.parse(s) : null; } catch { return null; }
   });
+  const [techStale, setTechStale] = useState(true);
+  const [leaveStale, setLeaveStale] = useState(true);
   const [techRefreshing, setTechRefreshing] = useState(false);
   const [refreshSecsLeft, setRefreshSecsLeft] = useState(0);
   const [syncing, setSyncing] = useState(false);
@@ -361,6 +330,8 @@ export default function DashboardPage() {
     const quiet = silent || Object.keys(byCompanyRef.current).length > 0;
     if (quiet) { setSyncing(true); } else { setLoading(true); }
     let anyFailed = false;
+    let anyStale = false;
+    let oldestSnapshot = Infinity;
     const sfx = force ? "&force=1" : "";
 
     await Promise.all(
@@ -374,21 +345,31 @@ export default function DashboardPage() {
               const d = await r.json();
               if (d?.error) throw new Error(d.error); // error response — retry later
               const jobs: RawJob[] = Array.isArray(d) ? d : (d.Result ?? []);
-              return jobs.map((j: RawJob) => ({ ...j, _company: co.id }));
+              const snapshotAt = Number(r.headers.get("X-AFSS-Snapshot-At"));
+              const stale = r.headers.get("X-AFSS-Stale") !== "0";
+              return { jobs: jobs.map((j: RawJob) => ({ ...j, _company: co.id })), snapshotAt, stale };
             } catch { return null; }
           })
         );
         if (stages.some(s => s === null)) { anyFailed = true; return; } // keep last-known data for this company
-        byCompanyRef.current = { ...byCompanyRef.current, [co.id]: (stages as RawJob[][]).flat() };
+        const complete = stages.filter((s): s is NonNullable<typeof s> => s !== null);
+        byCompanyRef.current = { ...byCompanyRef.current, [co.id]: complete.flatMap(s => s.jobs) };
+        for (const result of complete) {
+          if (result.stale || !Number.isFinite(result.snapshotAt) || result.snapshotAt <= 0) anyStale = true;
+          else oldestSnapshot = Math.min(oldestSnapshot, result.snapshotAt);
+        }
         setByCompany(byCompanyRef.current);
         setHasData(true);
-        setUpdated(new Date());
       })
     );
 
+    setDataStale(anyFailed || anyStale);
+    if (!anyFailed && !anyStale && Number.isFinite(oldestSnapshot)) setUpdated(new Date(oldestSnapshot));
     try {
       localStorage.setItem(JOBS_LS_KEY, JSON.stringify(byCompanyRef.current));
-      localStorage.setItem(`${JOBS_LS_KEY}-ts`, String(Date.now()));
+      if (!anyFailed && !anyStale && Number.isFinite(oldestSnapshot)) {
+        localStorage.setItem(`${JOBS_LS_KEY}-ts`, String(oldestSnapshot));
+      }
     } catch {} // quota / private mode — the stored copy is an optimisation only
 
     if (quiet) { setSyncing(false); } else { setLoading(false); }
@@ -401,7 +382,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     load(false).then(() => load(true, true)); // eslint-disable-line react-hooks/exhaustive-deps
-    const t = setInterval(() => { load(true, true); loadAfacProspect(true, monthFilterRef.current); loadTechSupport(true, monthFilterRef.current); }, 3_600_000);
+    const t = setInterval(() => { load(false, true); loadAfacProspect(false, monthFilterRef.current); loadTechSupport(false, monthFilterRef.current); loadLeave(); loadExtraTeam(); }, 90_000);
     const tRefresh = setTimeout(() => loadTechSupport(false, monthFilterRef.current), 90_000); // eslint-disable-line react-hooks/exhaustive-deps
     return () => { clearInterval(t); clearTimeout(tRefresh); if (partialTimerRef.current) clearTimeout(partialTimerRef.current); };
   }, []); // intentional: load is stable, we only want this to run once
@@ -431,7 +412,11 @@ export default function DashboardPage() {
 
   function loadLeave(force = false) {
     const sfx = force ? "?force=1" : "";
-    fetch(`/api/leave${sfx}`).then(r => r.json()).then(d => {
+    fetch(`/api/leave${sfx}`).then(r => {
+      if (!r.ok) throw new Error("Leave data is unavailable");
+      setLeaveStale(r.headers.get("X-AFSS-Stale") !== "0");
+      return r.json();
+    }).then(d => {
       if (d.team) {
         setTeam(d.team);
         // Only apply leave API's public holidays when viewing the current month.
@@ -442,8 +427,7 @@ export default function DashboardPage() {
           setPublicHolidays(d.publicHolidays ?? []);
         }
       }
-      else setTeam(d); // backward compat
-    }).catch(() => {});
+    }).catch(() => setLeaveStale(true));
   }
 
   // /api/leave only ever scans the real current month by default — leave
@@ -465,11 +449,14 @@ export default function DashboardPage() {
   function loadExtraLeaveMonths(months: { year: number; month: number }[]) {
     const toFetch = months.filter(({ year, month }) => !(year === now.getFullYear() && month === now.getMonth() + 1));
     if (toFetch.length === 0) return;
-    Promise.all(
-      toFetch.map(({ year, month }) =>
+    Promise.all([
+      Promise.all(toFetch.map(({ year, month }) =>
         fetch(`/api/leave?year=${year}&month=${month}`).then(r => r.json()).catch(() => null)
-      )
-    ).then(results => {
+      )),
+      Promise.all(toFetch.map(({ year, month }) =>
+        fetch(`/api/extra-team?year=${year}&month=${month}`).then(r => r.json()).catch(() => null)
+      )),
+    ]).then(([results, extraResults]) => {
       setTeam(prev => prev.map(member => {
         let leave = member.leave;
         let ph    = member.publicHolidayBookings ?? [];
@@ -481,6 +468,14 @@ export default function DashboardPage() {
         }
         const changed = leave.length !== member.leave.length || ph.length !== (member.publicHolidayBookings ?? []).length;
         return changed ? { ...member, leave, publicHolidayBookings: ph } : member;
+      }));
+      setExtraTeam(prev => prev.map(member => {
+        let leave = member.leave;
+        for (const res of extraResults) {
+          const match = (Array.isArray(res) ? res as TeamMember[] : []).find(item => item.id === member.id);
+          if (match) leave = mergeEntries(leave, match.leave ?? []);
+        }
+        return leave.length !== member.leave.length ? { ...member, leave } : member;
       }));
     }).catch(() => {});
   }
@@ -496,7 +491,13 @@ export default function DashboardPage() {
   }
 
   function loadExtraTeam() {
-    fetch("/api/extra-team").then(r => r.json()).then(setExtraTeam).catch(() => {});
+    fetch("/api/extra-team").then(r => r.json()).then((members: TeamMember[]) => {
+      if (!Array.isArray(members)) return;
+      setExtraTeam(previous => members.map(member => ({
+        ...member,
+        leave: mergeEntries(member.leave, previous.find(item => item.id === member.id)?.leave ?? []),
+      })));
+    }).catch(() => {});
   }
 
   function loadIntercompany() {
@@ -513,15 +514,17 @@ export default function DashboardPage() {
 
   async function saveIntercompany() {
     setIcSaving(true);
+    setSaveError("");
     try {
-      await fetch("/api/intercompany", {
+      const response = await fetch("/api/intercompany", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ hrs: icHrs, rmHrs: icRmHrs, aeHrs: icAeHrs, fiaHrs: icFiaHrs }),
       });
+      if (!response.ok) throw new Error("Intercompany hours could not be saved");
       setIcSaved(true);
       setTimeout(() => setIcSaved(false), 2000);
-    } catch { /* ignore */ }
+    } catch { setSaveError("Intercompany hours could not be saved. Please try again."); }
     setIcSaving(false);
   }
 
@@ -541,29 +544,35 @@ export default function DashboardPage() {
   async function saveExtraMember() {
     if (!selectedStaff) return;
     setSaving(true);
+    setSaveError("");
     try {
-      await fetch("/api/extra-team", {
+      const response = await fetch("/api/extra-team", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...selectedStaff, role: newRole }),
       });
+      if (!response.ok) throw new Error("Team member could not be saved");
       setAddingMember(false);
       setSearchName("");
       setSearchResults([]);
       setSelectedStaff(null);
       setNewRole("");
       loadExtraTeam();
-    } catch { /* ignore */ }
+    } catch { setSaveError("Team member could not be saved. Please try again."); }
     setSaving(false);
   }
 
   async function removeExtraMember(id: number) {
-    await fetch("/api/extra-team", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
-    loadExtraTeam();
+    setSaveError("");
+    try {
+      const response = await fetch("/api/extra-team", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!response.ok) throw new Error("Team member could not be removed");
+      loadExtraTeam();
+    } catch { setSaveError("Team member could not be removed. Please try again."); }
   }
 
   function loadAfacExclusions() {
@@ -575,17 +584,20 @@ export default function DashboardPage() {
 
   async function saveAfacExclusions(dates: string[]) {
     setAfacExcSaving(true);
+    setSaveError("");
     try {
-      await fetch("/api/afac-exclusions", {
+      const response = await fetch("/api/afac-exclusions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dates),
       });
+      if (!response.ok) throw new Error("AFAC exclusions could not be saved");
       setAfacExclusions(dates);
+      setAfacExcDate("");
       setAfacExcSaved(true);
       setTimeout(() => setAfacExcSaved(false), 2000);
       loadAfacProspect(true, monthFilter);
-    } catch { /* ignore */ }
+    } catch { setSaveError("AFAC excluded dates could not be saved. Please try again."); }
     setAfacExcSaving(false);
   }
 
@@ -598,9 +610,13 @@ export default function DashboardPage() {
       p.set("month", m);
     }
     fetch(`/api/afac-prospect?${p}`)
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error("AFAC prospect data is unavailable");
+        if (monthFilterRef.current === mf) setAfacStale(r.headers.get("X-AFSS-Stale") !== "0");
+        return r.json();
+      })
       .then(d => { if (monthFilterRef.current !== mf) return; if (d?.jobs != null) setAfacProspect(d); })
-      .catch(() => {});
+      .catch(() => { if (monthFilterRef.current === mf) setAfacStale(true); });
   }
 
   function loadTechSupport(force = false, mf = monthFilter) {
@@ -615,14 +631,18 @@ export default function DashboardPage() {
     }
     if (force) setTechRefreshing(true);
     fetch(`/api/tech-support?${p}`)
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error("Technical support data is unavailable");
+        if (monthFilterRef.current === mf) setTechStale(r.headers.get("X-AFSS-Stale") !== "0");
+        return r.json();
+      })
       .then(d => {
         if (monthFilterRef.current !== mf) return; // discard stale response
         if (d?.otherBillable    != null) { setObData(d.otherBillable);    try { localStorage.setItem(`d1-ts-ob-${mf}`, JSON.stringify(d.otherBillable));    } catch {} }
         if (d?.investedTime     != null) { setItData(d.investedTime);     try { localStorage.setItem(`d1-ts-it-${mf}`, JSON.stringify(d.investedTime));     } catch {} }
         if (d?.qualityAssurance != null) { setQaData(d.qualityAssurance); try { localStorage.setItem(`d1-ts-qa-${mf}`, JSON.stringify(d.qualityAssurance)); } catch {} }
       })
-      .catch(() => {})
+      .catch(() => { if (monthFilterRef.current === mf) setTechStale(true); })
       .finally(() => { if (force) setTechRefreshing(false); });
   }
 
@@ -746,7 +766,7 @@ export default function DashboardPage() {
       m++; if (m > 12) { m = 1; y++; }
     }
     loadExtraLeaveMonths(months); // eslint-disable-line react-hooks/exhaustive-deps
-  }, [monthFilter, team.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [monthFilter, team.length, extraTeam.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Cold-start recovery: if tech-support data is still null 15 s after mount
   // (server was still building the cache when the first request arrived),
@@ -876,10 +896,25 @@ export default function DashboardPage() {
   const holidaysFor = (year: number, month: number): PublicHoliday[] =>
     monthlyHolidays[`${year}-${String(month).padStart(2, "0")}`] ?? [];
   const monthSupplyHours = (member: TeamMember, year: number, month: number): number => {
-    if (year === now.getFullYear() && month === now.getMonth() + 1) return member.monthlyHours;
+    const aestNow = new Date(Date.now() + 10 * 60 * 60 * 1000);
+    if (year === aestNow.getUTCFullYear() && month === aestNow.getUTCMonth() + 1) return member.monthlyHours;
     const bookedThisMonth = remainingPublicHolidayEntriesInMonth(member, new Date(year, month - 1, 1));
     const count = unionHolidayCount(holidaysFor(year, month), bookedThisMonth);
     return totalWorkingDaysInMonth(year, month) - count * 8;
+  };
+  const supplyHoursForMember = (member: TeamMember, year: number, month: number): number => {
+    const aestNow = new Date(Date.now() + 10 * 60 * 60 * 1000);
+    const isCurrent = year === aestNow.getUTCFullYear() && month === aestNow.getUTCMonth() + 1;
+    const startDay = new Date(Date.UTC(aestNow.getUTCFullYear(), aestNow.getUTCMonth(), aestNow.getUTCDate() + (aestNow.getUTCHours() >= 15 ? 1 : 0)));
+    const start = isCurrent
+      ? startDay.toISOString().slice(0, 10)
+      : `${year}-${String(month).padStart(2, "0")}-01`;
+    const end = `${year}-${String(month).padStart(2, "0")}-${String(new Date(year, month, 0).getDate()).padStart(2, "0")}`;
+    const holidays = new Set((isCurrent ? publicHolidays : holidaysFor(year, month)).map(h => h.date));
+    for (const booking of member.publicHolidayBookings ?? []) {
+      for (const date of expandRange(booking.from, booking.to)) holidays.add(date);
+    }
+    return remainingSupplyHours(monthSupplyHours(member, year, month), member.leave, start, end, holidays);
   };
   const fmtLeaveLabel = (from: string, to: string) => {
     const fromD = new Date(from), toD = new Date(to);
@@ -926,13 +961,24 @@ export default function DashboardPage() {
         <span className="flex-1 min-w-0 flex flex-wrap items-center gap-x-2 gap-y-1 overflow-hidden">
           {loading && !hasData && <span className="text-xs text-[#c94437] animate-pulse shrink-0">Loading…</span>}
           {updated && !loading && (
-            <span className="text-xs text-neutral-400 shrink-0">Updated: {updated.toLocaleTimeString()}</span>
+            <span className="text-xs text-neutral-400 shrink-0">Oldest job snapshot: {updated.toLocaleString()}{dataStale ? " (may be outdated)" : ""}</span>
           )}
           {syncing && !loading && <span className="text-xs text-[#c94437] animate-pulse shrink-0">Syncing…</span>}
+          {leaveStale && <span className="text-xs text-amber-700">Leave data may be outdated</span>}
+          {(techStale || afacStale) && (
+            <span className="text-xs text-amber-700">{techStale ? "Tech support may be outdated" : ""}{techStale && afacStale ? " | " : ""}{afacStale ? "AFAC demand may be outdated" : ""}</span>
+          )}
           <span className="text-xs text-neutral-400 truncate">
             {hasData && `${visibleAll.length} total jobs${monthFilter !== "all" ? ` in ${monthOptions.find(o => o.value === monthFilter)?.label ?? ""}` : " across all companies"}`}
           </span>
         </span>
+        <button
+          type="button"
+          disabled={syncing || loading || techRefreshing}
+          onClick={() => { load(true, true); loadAfacProspect(true, monthFilter); loadTechSupport(true, monthFilter); loadLeave(true); loadExtraTeam(); }}
+          className="shrink-0 px-2 py-1 rounded border border-neutral-300 text-xs bg-white disabled:opacity-50"
+          title="Fetch current SimPRO data. Automatic checks run every 90 seconds with a five-minute cache."
+        >Refresh all data</button>
         <select
           value={monthFilter}
           onChange={e => setMonthFilter(e.target.value)}
@@ -1113,10 +1159,7 @@ export default function DashboardPage() {
                 {team.filter(m => !hiddenCoreIds.has(m.id)).map(member => {
                   const onLeaveNow = isOnLeaveToday(member, now);
                   const monthVals = supplyMonths.map(({ year, month }) => {
-                    const isCurrent = year === now.getFullYear() && month === now.getMonth() + 1;
-                    if (isCurrent) return member.monthlyHours;
-                    const leaveDays = remainingLeaveDays(member, new Date(year, month - 1, 1));
-                    return Math.max(0, monthSupplyHours(member, year, month) - leaveDays * 8);
+                    return supplyHoursForMember(member, year, month);
                   });
                   return (
                     <tr key={member.id}>
@@ -1157,10 +1200,7 @@ export default function DashboardPage() {
                 {extraTeam.map(member => {
                   const onLeaveNow = isOnLeaveToday(member, now);
                   const monthVals = supplyMonths.map(({ year, month }) => {
-                    const isCurrent = year === now.getFullYear() && month === now.getMonth() + 1;
-                    if (isCurrent) return member.monthlyHours;
-                    const leaveDays = remainingLeaveDays(member, new Date(year, month - 1, 1));
-                    return Math.max(0, monthSupplyHours(member, year, month) - leaveDays * 8);
+                    return supplyHoursForMember(member, year, month);
                   });
                   return (
                     <tr key={member.id} style={{ backgroundColor: "#fff1f2" }}>
@@ -1201,12 +1241,9 @@ export default function DashboardPage() {
                 <tr className="font-bold">
                   <td className="border border-[#e5e7eb] px-3 py-2" style={{ backgroundColor: "#faf8f6" }} />
                   {supplyMonths.map(({ year, month }) => {
-                    const isCurrent = year === now.getFullYear() && month === now.getMonth() + 1;
-                    const colTotal = [...team.filter(m => !hiddenCoreIds.has(m.id)), ...extraTeam].reduce((s, m) => {
-                      if (isCurrent) return s + m.monthlyHours;
-                      const leaveDays = remainingLeaveDays(m, new Date(year, month - 1, 1));
-                      return s + Math.max(0, monthSupplyHours(m, year, month) - leaveDays * 8);
-                    }, 0);
+                    const colTotal = [...team.filter(m => !hiddenCoreIds.has(m.id)), ...extraTeam].reduce(
+                      (sum, member) => sum + supplyHoursForMember(member, year, month), 0,
+                    );
                     return (
                       <td key={`${year}-${month}`} className="border border-[#e5e7eb] px-1.5 py-2 text-center" style={{ backgroundColor: "#faf8f6" }}>
                         {colTotal}
@@ -1215,12 +1252,9 @@ export default function DashboardPage() {
                   })}
                   <td className="border border-[#e5e7eb] px-2 py-2 text-center" style={{ backgroundColor: "#faf8f6" }}>
                     {supplyMonths.reduce((total, { year, month }) => {
-                      const isCurrent = year === now.getFullYear() && month === now.getMonth() + 1;
-                      return total + [...team.filter(m => !hiddenCoreIds.has(m.id)), ...extraTeam].reduce((s, m) => {
-                        if (isCurrent) return s + m.monthlyHours;
-                        const leaveDays = remainingLeaveDays(m, new Date(year, month - 1, 1));
-                        return s + Math.max(0, monthSupplyHours(m, year, month) - leaveDays * 8);
-                      }, 0);
+                      return total + [...team.filter(m => !hiddenCoreIds.has(m.id)), ...extraTeam].reduce(
+                        (sum, member) => sum + supplyHoursForMember(member, year, month), 0,
+                      );
                     }, 0)}
                   </td>
                   <td className="border border-[#e5e7eb] px-2 py-2" style={{ backgroundColor: "#faf8f6" }} />
@@ -1304,6 +1338,7 @@ export default function DashboardPage() {
                               >
                                 {saving ? "Saving…" : "Save"}
                               </button>
+                              {saveError && <span role="alert" className="text-xs text-red-700">{saveError}</span>}
                             </div>
                           )}
                         </div>
@@ -1336,6 +1371,7 @@ export default function DashboardPage() {
                 >
                   {icSaving ? "Saving…" : icSaved ? "Saved ✓" : "Save"}
                 </button>
+                {saveError && <span role="alert" className="text-xs text-red-700">{saveError}</span>}
               </div>
               <div className="border border-[#e5e7eb] px-3 py-2 mb-2 text-xs text-center italic text-[#52525b]" style={{ backgroundColor: "#faf8f6" }}>
                 this is time assigned to RM or Adair for them to schedule tech team resources at their pleasure ($100 hour)
@@ -1472,12 +1508,9 @@ export default function DashboardPage() {
               // exactly instead of double-counting the current month on top
               // of the target month.
               const cumulativeSupply = (members: TeamMember[]) => supplyMonths.reduce((total, { year, month }) => {
-                const isCurrent = year === now.getFullYear() && month === now.getMonth() + 1;
-                return total + members.reduce((s, m) => {
-                  if (isCurrent) return s + m.monthlyHours;
-                  const leaveDays = remainingLeaveDays(m, new Date(year, month - 1, 1));
-                  return s + Math.max(0, monthSupplyHours(m, year, month) - leaveDays * 8);
-                }, 0);
+                return total + members.reduce(
+                  (sum, member) => sum + supplyHoursForMember(member, year, month), 0,
+                );
               }, 0);
               const supplyAudit  = cumulativeSupply(allMembers.filter(m => m.role.includes("Primary APFS")));
               const supplyTech   = cumulativeSupply(allMembers.filter(m => !m.role.includes("Primary APFS")));
@@ -1526,11 +1559,11 @@ export default function DashboardPage() {
                       </tr>
                       <tr>
                         <td className="border border-[#e5e7eb] px-3 py-2 text-sm font-semibold">Excess Demand Hours Audits</td>
-                        <td className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm">{Math.abs(excessAudit).toFixed(2)}</td>
+                        <td className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm">{excessAudit.toFixed(2)}</td>
                       </tr>
                       <tr>
                         <td className="border border-[#e5e7eb] px-3 py-2 text-sm font-semibold">Excess Demand Days Audits</td>
-                        <td className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm">{Math.abs(excessDaysAudit).toFixed(2)}</td>
+                        <td className="border border-[#e5e7eb] px-3 py-2 text-center font-bold text-sm">{excessDaysAudit.toFixed(2)}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -1613,7 +1646,6 @@ export default function DashboardPage() {
                               onClick={() => {
                                 if (!afacExcDate || afacExclusions.includes(afacExcDate)) return;
                                 const newList = [...afacExclusions, afacExcDate].sort();
-                                setAfacExcDate("");
                                 saveAfacExclusions(newList);
                               }}
                               disabled={afacExcSaving}
@@ -1622,6 +1654,7 @@ export default function DashboardPage() {
                             {afacExcSaved && (
                               <span className="text-xs text-green-600 font-semibold">Saved ✓</span>
                             )}
+                            {saveError && <span role="alert" className="text-xs text-red-700">{saveError}</span>}
                           </div>
                           {afacExclusions.length > 0 && (
                             <div className="flex flex-wrap gap-1">

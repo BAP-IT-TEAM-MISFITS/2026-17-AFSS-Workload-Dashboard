@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import { join } from "path";
-import { gcsRead, gcsWrite } from "../../lib/gcsCache";
+import { gcsRead } from "../../lib/gcsCache";
+import { persistJson } from "../../lib/persistJson";
 
 const DATA_FILE = join(process.cwd(), "data", "intercompany.json");
 const GCS_KEY   = "data-intercompany.json";
@@ -34,10 +35,9 @@ export async function POST(req: Request) {
   try {
     const body = await req.json() as IcData;
     const json = JSON.stringify(body, null, 2);
-    await fs.writeFile(DATA_FILE, json, "utf-8");
-    await gcsWrite(GCS_KEY, json);
+    await persistJson(DATA_FILE, GCS_KEY, json);
     return NextResponse.json({ ok: true });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: String(err) }, { status: 503 });
   }
 }
